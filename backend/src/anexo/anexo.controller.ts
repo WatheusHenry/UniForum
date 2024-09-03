@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { AnexoService } from './anexo.service';
 import { CreateAnexoDto } from './dto/create-anexo.dto';
 import { UpdateAnexoDto } from './dto/update-anexo.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('anexo')
 @Controller('anexo')
 export class AnexoController {
   constructor(private readonly anexoService: AnexoService) {}
