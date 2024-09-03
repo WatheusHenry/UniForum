@@ -132,4 +132,4 @@ h1 {
   width: 20.2rem;
   background-color: #2d2d30;
 }
-</style>npm 
+</style>
