@@ -26,5 +26,5 @@ export class CreateUsuarioDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ required: true })
-  readonly currentTerm: string;
+  readonly currentTerm: number;
 }

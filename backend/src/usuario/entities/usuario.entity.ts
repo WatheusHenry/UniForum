@@ -24,5 +24,5 @@ export class Usuario {
   cursos: Curso[];
 
   @Column({ type: 'varchar', length: 50 })
-  currentTerm: string; // Pode ser algo como "2024.1", "2024.2", etc.
+  currentTerm: number; // Pode ser algo como "2024.1", "2024.2", etc.
 }

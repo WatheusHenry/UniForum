@@ -4,6 +4,7 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsuarioService {
@@ -12,8 +13,16 @@ export class UsuarioService {
   ) { }
 
 
-  create(createUsuarioDto: CreateUsuarioDto) {
-    const usuario = this.usuarioRepository.save(createUsuarioDto)
+  async create(createUsuarioDto: CreateUsuarioDto) {
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(createUsuarioDto.password, salt);
+
+    const usuario = this.usuarioRepository.save({
+      ...createUsuarioDto,
+      password: hashedPassword,
+    });
+
     return usuario;
   }
 
@@ -38,8 +47,13 @@ export class UsuarioService {
 
     const usuarioAtualizado = { ...usuarioExistente };
 
-    Object.keys(updateUsuarioDto).forEach(key => {
+    // Se a senha for enviada no DTO, ela será criptografada antes de ser atualizada
+    if (updateUsuarioDto.password) {
+      const salt = await bcrypt.genSalt(10);
+      updateUsuarioDto.password = await bcrypt.hash(updateUsuarioDto.password, salt);
+    }
 
+    Object.keys(updateUsuarioDto).forEach((key) => {
       if (usuarioExistente[key] !== updateUsuarioDto[key]) {
         usuarioAtualizado[key] = updateUsuarioDto[key];
       }
@@ -48,6 +62,20 @@ export class UsuarioService {
     return this.usuarioRepository.save(usuarioAtualizado);
   }
 
+  async updatePassword(id: number, newPassword: string) {
+    const usuarioExistente = await this.usuarioRepository.findOne({ where: { id } });
+
+    if (!usuarioExistente) {
+      throw new NotFoundException(`Usuário com ID ${id} não encontrado`);
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt); 
+
+    usuarioExistente.password = hashedPassword;
+
+    return this.usuarioRepository.save(usuarioExistente);
+  }
 
 
   remove(id: number) {

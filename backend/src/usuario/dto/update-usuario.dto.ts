@@ -8,27 +8,27 @@ export class UpdateUsuarioDto extends PartialType(CreateUsuarioDto) {
   @IsOptional()
   @ApiProperty()
 
-  readonly name?: string;
+  name?: string;
 
   @IsEmail()
   @IsOptional()
   @ApiProperty()
 
-  readonly email?: string;
+  email?: string;
 
   @IsString()
   @IsOptional()
   @ApiProperty()
 
-  readonly password?: string;
+  password?: string;
 
   @IsArray()
   @IsOptional()
   @ApiProperty()
-  readonly courses?: number[]; // Array de IDs dos cursos nos quais o usuário está matriculado
+  courses?: number[]; // Array de IDs dos cursos nos quais o usuário está matriculado
 
   @IsString()
   @IsOptional()
   @ApiProperty()
-  readonly currentTerm?: string;
+  currentTerm?: number;
 }
