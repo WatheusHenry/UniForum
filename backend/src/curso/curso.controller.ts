@@ -7,30 +7,30 @@ import { ApiTags } from '@nestjs/swagger';
 @ApiTags('Course')
 @Controller('curso')
 export class CursoController {
-  constructor(private readonly cursoService: CursoService) {}
+  constructor(private readonly cursoService: CursoService) { }
 
   @Post()
-  create(@Body() createCursoDto: CreateCursoDto) {
-    return this.cursoService.create(createCursoDto);
+  async create(@Body() createCursoDto: CreateCursoDto) {
+    return await this.cursoService.create(createCursoDto);
   }
 
   @Get()
-  findAll() {
-    return this.cursoService.findAll();
+  async findAll() {
+    return await this.cursoService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cursoService.findOne(+id);
+  async findOne(@Param('id') id: number) {
+    return await this.cursoService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCursoDto: UpdateCursoDto) {
-    return this.cursoService.update(+id, updateCursoDto);
+  async update(@Param('id') id: number, @Body() updateCursoDto: UpdateCursoDto) {
+    return await this.cursoService.update(id, updateCursoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cursoService.remove(+id);
+  async remove(@Param('id') id: number) {
+    return await this.cursoService.remove(id);
   }
 }

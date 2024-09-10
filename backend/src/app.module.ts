@@ -6,14 +6,13 @@ import { MensagemModule } from './mensagem/mensagem.module';
 import { AnexoModule } from './anexo/anexo.module';
 import { CursoModule } from './curso/curso.module';
 import { DisciplinaModule } from './disciplina/disciplina.module';
-import { DataSource } from 'typeorm';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 
 
 @Module({
   imports: [UsuarioModule, MensagemModule, AnexoModule, CursoModule, DisciplinaModule, ConfigModule.forRoot(),
-
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: process.env.DB_CONNECTION,
       host: process.env.DB_HOST,
@@ -22,7 +21,11 @@ import { ConfigModule } from '@nestjs/config';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true
+      synchronize: true,
+      migrations: ['dist/migrations/*.js'], // Caminho para as migrations
+      cli: {
+        migrationsDir: 'src/migrations',
+      },
     } as TypeOrmModuleOptions)
   ],
   controllers: [AppController],
@@ -30,25 +33,5 @@ import { ConfigModule } from '@nestjs/config';
 })
 export class AppModule {
 
-  databaseProviders = [
-    {
-      provide: 'DATA_SOURCE',
-      useFactory: async () => {
-        const dataSource = new DataSource({
-          type: 'mysql',
-          host: 'localhost',
-          port: 3306,
-          username: 'root',
-          password: 'root',
-          database: 'test',
-          entities: [
-            __dirname + '/../**/*.entity{.ts,.js}',
-          ],
-          synchronize: true,
-        });
 
-        return dataSource.initialize();
-      },
-    },
-  ];
 }
