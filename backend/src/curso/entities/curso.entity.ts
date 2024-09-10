@@ -1,6 +1,7 @@
+// curso.entity.ts
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany } from 'typeorm';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
-
+import { Disciplina } from 'src/disciplina/entities/disciplina.entity';
 
 @Entity('courses')
 export class Curso {
@@ -15,4 +16,7 @@ export class Curso {
 
   @ManyToMany(() => Usuario, (usuario) => usuario.cursos)
   usuarios: Usuario[];
+
+  @OneToMany(() => Disciplina, (disciplina) => disciplina.curso)
+  disciplinas: Disciplina[];
 }

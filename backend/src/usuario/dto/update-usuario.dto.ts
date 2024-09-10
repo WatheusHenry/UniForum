@@ -30,5 +30,5 @@ export class UpdateUsuarioDto extends PartialType(CreateUsuarioDto) {
   @IsString()
   @IsOptional()
   @ApiProperty()
-  currentTerm?: number;
+  currentTerm?: string;
 }
