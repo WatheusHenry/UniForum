@@ -321,7 +321,7 @@ export default {
 }
 .alunos-matriculados {
   color: white;
-  margin-left: 5rem;
+  margin-left: 2rem;
 
  
 }
@@ -369,13 +369,11 @@ li {
   margin-bottom: 2rem;
   margin-left: 1rem;
   gap: 10px;
-
-
 }
 
 .dicas-header img {
-  width: 24px;
-  height: 24px;
+  width: 24px !important;
+  height: 24px !important;
   margin-top: 1rem;
 }
 
