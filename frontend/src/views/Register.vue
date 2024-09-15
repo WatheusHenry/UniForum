@@ -28,7 +28,7 @@
             <label for="termo">Digite seu termo</label>
           </FloatLabel>
         </div>
-        <Button style="width: 50%; margin-inline: auto"><a href="/" class="texto-button-entrar">Entrar</a></Button>
+        <Button style="width: 50%; margin-inline: auto"><a href="/Home" class="texto-button-entrar">Entrar</a></Button>
       </div>
     </section>
   </div>
@@ -124,12 +124,12 @@ h1 {
 }
 
 .dropdown-curso{
-  width: 20.2rem;
+  width: 14.3rem;
   background-color: #2d2d30;
 }
 
 .dropdown-termo{
-  width: 20.2rem;
+  width: 14.3rem;
   background-color: #2d2d30;
 }
 </style>

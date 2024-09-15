@@ -19,7 +19,7 @@
             <label for="password">Senha</label>
           </FloatLabel>
         </div>
-        <Button style="width: 50%;margin-inline: auto">Entrar</Button>
+        <Button style="width: 50%; margin-inline: auto"><a href="/Home" class="texto-button-entrar">Entrar</a></Button>
         <a href="/register" style="margin-inline: auto;color: white;">Cadastre-se</a>
       </div>
     </section>
