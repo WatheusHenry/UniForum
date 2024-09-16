@@ -1,5 +1,5 @@
 import { Message } from "src/message/entities/message.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('attachment')
 export class Anexo {
@@ -19,5 +19,6 @@ export class Anexo {
     createdAt: Date;
 
     @ManyToOne(() => Message, (message) => message.attachments)
+    @JoinColumn({ name: 'message_id' })
     message: Message;
 }

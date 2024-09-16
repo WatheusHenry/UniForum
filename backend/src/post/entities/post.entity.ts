@@ -1,7 +1,7 @@
 import { Disciplina } from "src/disciplina/entities/disciplina.entity";
 import { Message } from "src/message/entities/message.entity";
 import { Usuario } from "src/usuario/entities/usuario.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('post')
 export class Post {
@@ -18,9 +18,11 @@ export class Post {
     createdAt: Date;
 
     @ManyToOne(() => Usuario, (user) => user.posts, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'user_id' })
     user: Usuario;
 
     @ManyToOne(() => Disciplina, (discipline) => discipline.posts)
+    @JoinColumn({ name: 'discipline_id' })
     discipline: Disciplina;
 
     @OneToMany(() => Message, (message) => message.post)

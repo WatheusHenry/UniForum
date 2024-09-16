@@ -32,7 +32,7 @@ export class Usuario {
   courses: Curso[];
 
   @ApiProperty({ example: '2024.1', description: 'Período atual do usuário' })
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ name: 'current_term', type: 'varchar', length: 50 })
   currentTerm: string;
 
   @OneToMany(() => Post, (post) => post.user)
