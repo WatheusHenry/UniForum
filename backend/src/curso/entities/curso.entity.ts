@@ -14,9 +14,9 @@ export class Curso {
   @Column({ type: 'text' })
   description: string;
 
-  @ManyToMany(() => Usuario, (usuario) => usuario.cursos)
-  usuarios: Usuario[];
+  @ManyToMany(() => Usuario, (user) => user.courses)
+  users: Usuario[];
 
-  @OneToMany(() => Disciplina, (disciplina) => disciplina.curso)
-  disciplinas: Disciplina[];
+  @OneToMany(() => Disciplina, (discipline) => discipline.course)
+  disciplines: Disciplina[];
 }

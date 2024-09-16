@@ -1,8 +1,9 @@
 // disciplina.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { Curso } from 'src/curso/entities/curso.entity';
+import { Post } from 'src/post/entities/post.entity';
 
-@Entity('disciplinas')
+@Entity('discipline')
 export class Disciplina {
   @PrimaryGeneratedColumn()
   id: number;
@@ -13,6 +14,9 @@ export class Disciplina {
   @Column({ type: 'text' })
   description: string;
 
-  @ManyToOne(() => Curso, (curso) => curso.disciplinas, { onDelete: 'CASCADE' })
-  curso: Curso;  // Este campo refere-se ao curso ao qual a disciplina pertence
+  @ManyToOne(() => Curso, (course) => course.disciplines, { onDelete: 'CASCADE' })
+  course: Curso;  // Este campo refere-se ao curso ao qual a disciplina pertence
+
+  @OneToMany(() => Post, (post) => post.discipline, { onDelete: 'CASCADE' })
+  posts: Post[];
 }
