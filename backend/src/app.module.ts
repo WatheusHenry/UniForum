@@ -8,6 +8,7 @@ import { CursoModule } from './curso/curso.module';
 import { DisciplinaModule } from './disciplina/disciplina.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { MinioClientModule } from './minio-client/minio-client.module';
 
 
 @Module({
@@ -26,7 +27,8 @@ import { ConfigModule } from '@nestjs/config';
       cli: {
         migrationsDir: 'src/migrations',
       },
-    } as TypeOrmModuleOptions)
+    } as TypeOrmModuleOptions),
+    MinioClientModule
   ],
   controllers: [AppController],
   providers: [AppService],
