@@ -8,6 +8,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { PostModule } from './post/post.module';
 import { MessageModule } from './message/message.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { MessageModule } from './message/message.module';
     } as TypeOrmModuleOptions),
     PostModule,
     MessageModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [AppService],

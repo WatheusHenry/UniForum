@@ -1,12 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, UseGuards } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
 
 @ApiTags('User')
-@Controller('usuario')
+@Controller('user')
 export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) { }
 
@@ -16,6 +17,8 @@ export class UsuarioController {
   }
 
   @Get()
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   findAll() {
     return this.usuarioService.findAll();
   }
@@ -26,6 +29,8 @@ export class UsuarioController {
   }
 
   @Patch(':id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   update(@Param('id') id: string, @Body() updateUsuarioDto: UpdateUsuarioDto) {
     return this.usuarioService.update(+id, updateUsuarioDto);
   }
