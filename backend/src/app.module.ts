@@ -9,6 +9,8 @@ import { ConfigModule } from '@nestjs/config';
 import { PostModule } from './post/post.module';
 import { MessageModule } from './message/message.module';
 import { AuthModule } from './auth/auth.module';
+import { MinioClientModule } from './minio-client/minio-client.module';
+
 
 @Module({
   imports: [
@@ -35,6 +37,7 @@ import { AuthModule } from './auth/auth.module';
     PostModule,
     MessageModule,
     AuthModule,
+    MinioClientModule
   ],
   controllers: [],
   providers: [AppService],
