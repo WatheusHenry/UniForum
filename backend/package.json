@@ -29,7 +29,7 @@
     "@nestjs/swagger": "^7.4.0",
     "@nestjs/typeorm": "^10.0.2",
     "@types/bcrypt": "^5.0.2",
-    "bcryptjs": "^2.4.3",
+    "bcrypt": "^5.1.1",
     "class-validator": "^0.14.1",
     "mysql2": "^3.11.0",
     "nestjs-minio": "^2.6.2",
