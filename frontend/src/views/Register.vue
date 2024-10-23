@@ -8,6 +8,10 @@
         <h1>Cadastro do usuário</h1>
         <div style="display: flex; flex-direction: column; width: 50%; margin-inline: auto; gap: 2rem;">
           <FloatLabel>
+            <InputText id="name" v-model="nome" />
+            <label for="name">Nome</label>
+          </FloatLabel>
+          <FloatLabel>
             <InputText id="username" v-model="email" />
             <label for="username">E-mail</label>
           </FloatLabel>
@@ -28,7 +32,7 @@
             <label for="termo">Digite seu termo</label>
           </FloatLabel>
         </div>
-        <Button style="width: 50%; margin-inline: auto"><a href="/Home" class="texto-button-entrar">Entrar</a></Button>
+        <Button style="width: 50%; margin-inline: auto" @click="handleRegister">Cadastrar</Button>
       </div>
     </section>
   </div>
@@ -36,11 +40,13 @@
 
 <script setup>
 import { ref } from 'vue';
+import { register } from '../services/authService'; // Importando a função de registro
 import Dropdown from 'primevue/dropdown';
 
-const email = ref(null);
-const senha = ref(null);
-const senhaRepetida = ref(null);
+const nome = ref('');
+const email = ref('');
+const senha = ref('');
+const senhaRepetida = ref('');
 const cursoSelecionado = ref(null);
 const termoSelecionado = ref(null);
 
@@ -57,6 +63,27 @@ const termos = ref([
   { nome: '3º Termo', id: 3 },
   // Adicione mais termos conforme necessário
 ]);
+
+// Função para lidar com o cadastro do usuário
+const handleRegister = async () => {
+  if (senha.value !== senhaRepetida.value) {
+    alert('As senhas não coincidem');
+    return;
+  }
+
+  try {
+    const selectedCourses = [cursoSelecionado.value]; // Seleciona o curso
+    const selectedTerm = termoSelecionado.value.nome; // Seleciona o termo
+    const response = await register(nome.value, email.value, senha.value, selectedCourses, selectedTerm);
+    
+    if (response) {
+      alert('Cadastro realizado com sucesso!');
+    }
+  } catch (error) {
+    alert('Erro ao realizar cadastro.');
+    console.error(error);
+  }
+};
 </script>
 
 <style scoped>
@@ -123,12 +150,12 @@ h1 {
   color: black;
 }
 
-.dropdown-curso{
+.dropdown-curso {
   width: 14.3rem;
   background-color: #2d2d30;
 }
 
-.dropdown-termo{
+.dropdown-termo {
   width: 14.3rem;
   background-color: #2d2d30;
 }

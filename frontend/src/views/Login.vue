@@ -1,9 +1,6 @@
 <template>
-  <div style="display: flex;">
-
-    <div class="image">
-
-    </div>
+  <div style="display: flex;background-color: #2D2D30;">
+    <div class="image"></div>
 
     <section class="inputContainer">
       <div class="inputs">
@@ -19,7 +16,7 @@
             <label for="password">Senha</label>
           </FloatLabel>
         </div>
-        <Button style="width: 50%; margin-inline: auto"><a href="/Home" class="texto-button-entrar">Entrar</a></Button>
+        <Button @click="handleLogin" style="width: 50%; margin-inline: auto">Entrar</Button>
         <a href="/register" style="margin-inline: auto;color: white;">Cadastre-se</a>
       </div>
     </section>
@@ -27,11 +24,23 @@
 </template>
 
 <script setup>
-
 import { ref } from 'vue';
+import { login } from '../services/authService'; // Importar o serviço de login
 
-const email = ref(null);
-const senha = ref(null);
+const email = ref('');
+const senha = ref('');
+
+const handleLogin = async () => {
+  try {
+    const token = await login(email.value, senha.value);
+    if (token) {
+      // Redirecionar o usuário após login bem-sucedido
+      window.location.href = '/Home';
+    }
+  } catch (error) {
+    alert('Erro ao fazer login. Verifique suas credenciais.');
+  }
+};
 </script>
 
 <style >
