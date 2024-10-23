@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsEmail, IsNotEmpty, IsArray, ArrayNotEmpty } from 'class-validator';
+import { Curso } from 'src/curso/entities/curso.entity';
 
 export class CreateUsuarioDto {
   @IsString()
@@ -20,8 +21,8 @@ export class CreateUsuarioDto {
   @IsArray()
   @ArrayNotEmpty()
   @IsNotEmpty()
-  @ApiProperty({ example: [1, 2], description: 'IDs dos cursos em que o usuário está matriculado', required: true, isArray: true })
-  readonly courses: number[]; // Array de IDs dos cursos nos quais o usuário está matriculado
+  @ApiProperty({ required: true, isArray: true })
+  readonly courses: Curso[];
 
   @IsString()
   @IsNotEmpty()

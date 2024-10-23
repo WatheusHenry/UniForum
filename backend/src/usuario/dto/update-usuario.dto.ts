@@ -2,6 +2,7 @@ import { PartialType } from '@nestjs/mapped-types';
 import { CreateUsuarioDto } from './create-usuario.dto';
 import { IsString, IsEmail, IsOptional, IsArray } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Curso } from 'src/curso/entities/curso.entity';
 
 export class UpdateUsuarioDto extends PartialType(CreateUsuarioDto) {
   @IsString()
@@ -25,7 +26,7 @@ export class UpdateUsuarioDto extends PartialType(CreateUsuarioDto) {
   @IsArray()
   @IsOptional()
   @ApiProperty()
-  courses?: number[]; // Array de IDs dos cursos nos quais o usuário está matriculado
+  courses?: Curso[];
 
   @IsString()
   @IsOptional()

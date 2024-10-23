@@ -38,6 +38,13 @@ export class UsuarioService {
     return usuario;
   }
 
+  findOneByEmail(email: string) {
+    const usuario = this.usuarioRepository.findOne({
+      where: { email }
+    })
+    return usuario;
+  }
+
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
     const usuarioExistente = await this.usuarioRepository.findOne({ where: { id } });
 

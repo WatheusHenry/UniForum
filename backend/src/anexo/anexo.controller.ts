@@ -1,11 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { AnexoService } from './anexo.service';
 import { CreateAnexoDto } from './dto/create-anexo.dto';
 import { UpdateAnexoDto } from './dto/update-anexo.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
 
 @ApiTags('anexo')
 @Controller('anexo')
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 export class AnexoController {
   constructor(private readonly anexoService: AnexoService) {}
 

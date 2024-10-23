@@ -1,17 +1,22 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsuarioModule } from './usuario/usuario.module';
-import { MensagemModule } from './mensagem/mensagem.module';
 import { AnexoModule } from './anexo/anexo.module';
 import { CursoModule } from './curso/curso.module';
 import { DisciplinaModule } from './disciplina/disciplina.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-
+import { PostModule } from './post/post.module';
+import { MessageModule } from './message/message.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [UsuarioModule, MensagemModule, AnexoModule, CursoModule, DisciplinaModule, ConfigModule.forRoot(),
+  imports: [
+    UsuarioModule,
+    AnexoModule,
+    CursoModule,
+    DisciplinaModule,
+    ConfigModule.forRoot(),
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: process.env.DB_CONNECTION,
@@ -26,12 +31,12 @@ import { ConfigModule } from '@nestjs/config';
       cli: {
         migrationsDir: 'src/migrations',
       },
-    } as TypeOrmModuleOptions)
+    } as TypeOrmModuleOptions),
+    PostModule,
+    MessageModule,
+    AuthModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [AppService],
 })
-export class AppModule {
-
-
-}
+export class AppModule {}

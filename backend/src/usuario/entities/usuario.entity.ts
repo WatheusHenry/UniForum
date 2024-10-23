@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Curso } from 'src/curso/entities/curso.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
+import { Message } from 'src/message/entities/message.entity';
+import { Post } from 'src/post/entities/post.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany } from 'typeorm';
 
 @Entity('users')
 export class Usuario {
@@ -21,15 +23,21 @@ export class Usuario {
   password: string;
 
   @ApiProperty({ type: () => [Curso], description: 'Cursos em que o usuário está matriculado', isArray: true })
-  @ManyToMany(() => Curso, (curso) => curso.usuarios, { cascade: true })
+  @ManyToMany(() => Curso, (course) => course.users, { cascade: true })
   // @JoinTable({
   //   name: 'usuario_cursos',
   //   joinColumn: { name: 'user_id', referencedColumnName: 'id' },
   //   inverseJoinColumn: { name: 'course_id', referencedColumnName: 'id' },
   // })
-  cursos: Curso[];
+  courses: Curso[];
 
   @ApiProperty({ example: '2024.1', description: 'Período atual do usuário' })
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ name: 'current_term', type: 'varchar', length: 50 })
   currentTerm: string;
+
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[];
+
+  @OneToMany(() => Message, (message) => message.user)
+  messages: Message[];
 }
