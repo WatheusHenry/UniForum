@@ -1,12 +1,12 @@
 <template>
-  <div style="display: flex;background-color: #2D2D30;">
+  <div style="display: flex; background-color: #2D2D30;">
     <div class="image"></div>
 
     <section class="inputContainer">
       <div class="inputs">
         <img class="logoUnimar" src="../assets/images/logoUnimar.svg" alt="">
         <h1>Fórum de perguntas e respostas</h1>
-        <div class="" style="display: flex;flex-direction: column; width: 50%;margin-inline: auto;gap:2rem;">
+        <div class="" style="display: flex; flex-direction: column; width: 50%; margin-inline: auto; gap: 2rem;">
           <FloatLabel>
             <InputText id="username" v-model="email" />
             <label for="username">E-mail</label>
@@ -17,7 +17,7 @@
           </FloatLabel>
         </div>
         <Button @click="handleLogin" style="width: 50%; margin-inline: auto">Entrar</Button>
-        <a href="/register" style="margin-inline: auto;color: white;">Cadastre-se</a>
+        <a href="/register" style="margin-inline: auto; color: white;">Cadastre-se</a>
       </div>
     </section>
   </div>
@@ -25,17 +25,18 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router'; // Importar useRouter
 import { login } from '../services/authService'; // Importar o serviço de login
 
 const email = ref('');
 const senha = ref('');
+const router = useRouter(); // Criar uma instância do router
 
 const handleLogin = async () => {
   try {
     const token = await login(email.value, senha.value);
     if (token) {
-      // Redirecionar o usuário após login bem-sucedido
-      window.location.href = '/Home';
+      router.push('/home'); 
     }
   } catch (error) {
     alert('Erro ao fazer login. Verifique suas credenciais.');
@@ -43,7 +44,7 @@ const handleLogin = async () => {
 };
 </script>
 
-<style >
+<style>
 .image {
   width: 70vw;
   height: 100vh;
@@ -80,7 +81,7 @@ h1 {
   line-break: auto;
 }
 
-.p-inputtext{
+.p-inputtext {
   width: 100%;
   border-radius: 0rem !important;
   border: none !important;
@@ -89,20 +90,18 @@ h1 {
   color: white !important;
 }
 
-.p-password{
-  input{
-
+.p-password {
+  input {
     width: 100%;
   }
   width: 100%;
 }
 
-.p-button{
+.p-button {
   width: 7rem !important;
   border-radius: 0rem !important;
   background-color: white !important;
   color: #252526 !important;
   border: none !important;
-
 }
 </style>

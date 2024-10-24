@@ -5,26 +5,36 @@ import { Usuario } from './entities/usuario.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
+import { Curso } from 'src/curso/entities/curso.entity';
 
 @Injectable()
 export class UsuarioService {
   constructor(@InjectRepository(Usuario)
-  private readonly usuarioRepository: Repository<Usuario>
+  private readonly usuarioRepository: Repository<Usuario>,
+  @InjectRepository(Curso) 
+  private readonly cursoRepository: Repository<Curso>,
   ) { }
 
 
   async create(createUsuarioDto: CreateUsuarioDto) {
-
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(createUsuarioDto.password, salt);
-
-    const usuario = this.usuarioRepository.save({
+  
+    let curso: Curso | null = null; // Inicialize como null
+  
+    if (createUsuarioDto.courseIds && createUsuarioDto.courseIds.length > 0) {
+      curso = await this.cursoRepository.findOneBy({ id: createUsuarioDto.courseIds[0] }); // Assumindo que apenas um curso é selecionado
+    }
+  
+    const usuario = await this.usuarioRepository.save({
       ...createUsuarioDto,
       password: hashedPassword,
+      curso, 
     });
-
+  
     return usuario;
   }
+  
 
   findAll() {
     const usuario = this.usuarioRepository.find()

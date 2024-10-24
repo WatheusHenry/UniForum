@@ -6,11 +6,10 @@ import { CreateUsuarioDto } from 'src/usuario/dto/create-usuario.dto';
 
 @Injectable()
 export class AuthService {
-  userService: any;
   constructor(
     private readonly usuarioService: UsuarioService,
     private readonly jwtService: JwtService
-  ) {}
+  ) { }
 
   async signIn(
     email: string,
@@ -33,8 +32,11 @@ export class AuthService {
   }
 
   async register(createUsuarioDto: CreateUsuarioDto) {
-    // Supondo que o método `create` no `UserService` seja responsável por salvar o usuário no banco de dados
-    const newUser = await this.userService.create(createUsuarioDto);
-    return newUser;
+    const newUser = await this.usuarioService.create(createUsuarioDto);
+    const payload = { newUser };
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
+    
   }
 }

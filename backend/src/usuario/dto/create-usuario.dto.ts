@@ -1,6 +1,6 @@
+// create-usuario.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsEmail, IsNotEmpty, IsArray, ArrayNotEmpty } from 'class-validator';
-import { Curso } from 'src/curso/entities/curso.entity';
+import { IsString, IsEmail, IsNotEmpty, IsArray, ArrayNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateUsuarioDto {
   @IsString()
@@ -20,9 +20,9 @@ export class CreateUsuarioDto {
 
   @IsArray()
   @ArrayNotEmpty()
-  @IsNotEmpty()
-  @ApiProperty({ required: true, isArray: true })
-  readonly courses: Curso[];
+  @IsOptional()
+  @ApiProperty({ required: false, type: 'array', items: { type: 'number' }, description: 'IDs dos cursos em que o usuário está matriculado' })
+  readonly courseIds?: number[];
 
   @IsString()
   @IsNotEmpty()

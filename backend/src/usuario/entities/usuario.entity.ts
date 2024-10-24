@@ -1,8 +1,9 @@
+// usuario.entity.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { Curso } from 'src/curso/entities/curso.entity';
 import { Message } from 'src/message/entities/message.entity';
 import { Post } from 'src/post/entities/post.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity('users')
 export class Usuario {
@@ -22,14 +23,9 @@ export class Usuario {
   @Column({ type: 'varchar', length: 255 })
   password: string;
 
-  @ApiProperty({ type: () => [Curso], description: 'Cursos em que o usuário está matriculado', isArray: true })
-  @ManyToMany(() => Curso, (course) => course.users, { cascade: true })
-  // @JoinTable({
-  //   name: 'usuario_cursos',
-  //   joinColumn: { name: 'user_id', referencedColumnName: 'id' },
-  //   inverseJoinColumn: { name: 'course_id', referencedColumnName: 'id' },
-  // })
-  courses: Curso[];
+  @ApiProperty({ example: 1, description: 'ID do curso vinculado' })
+  @ManyToOne(() => Curso, (curso) => curso.users, { nullable: true }) // Relacionamento Many-to-One
+  curso: Curso; // Referência ao curso vinculado
 
   @ApiProperty({ example: '2024.1', description: 'Período atual do usuário' })
   @Column({ name: 'current_term', type: 'varchar', length: 50 })

@@ -23,7 +23,6 @@ export class AuthController {
     try {
       const newUser = await this.authService.register(createUsuarioDto);
       return res.status(201).json({
-        message: 'Usuário registrado com sucesso',
         user: newUser,
       });
     } catch (error) {

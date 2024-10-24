@@ -4,10 +4,15 @@ import { AuthController } from './auth.controller';
 import { UsuarioModule } from 'src/usuario/usuario.module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
+import { UsuarioService } from 'src/usuario/usuario.service';
+import { CursoModule } from 'src/curso/curso.module';
 
 @Module({
   imports: [
-    UsuarioModule,
+    UsuarioModule,CursoModule,
+    TypeOrmModule.forFeature([Usuario]), // Certifique-se de que o repositório está registrado
     ConfigModule.forRoot(),
     JwtModule.register({
       global: true,
@@ -16,6 +21,6 @@ import { JwtModule } from '@nestjs/jwt';
     })
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService,UsuarioService],
 })
 export class AuthModule {}

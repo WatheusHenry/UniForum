@@ -28,8 +28,8 @@
             <label for="curso">Selecione seu curso</label>
           </FloatLabel>
           <FloatLabel>
-            <Dropdown :options="termos" v-model="termoSelecionado" optionLabel="nome"  class="dropdown-termo"/>
-            <label for="termo">Digite seu termo</label>
+            <Dropdown :options="termos" v-model="termoSelecionado" optionLabel="nome" class="dropdown-termo"/>
+            <label for="termo">Selecione seu termo</label>
           </FloatLabel>
         </div>
         <Button style="width: 50%; margin-inline: auto" @click="handleRegister">Cadastrar</Button>
@@ -38,10 +38,19 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref } from 'vue';
 import { register } from '../services/authService'; // Importando a função de registro
 import Dropdown from 'primevue/dropdown';
+import FloatLabel from 'primevue/floatlabel';
+import InputText from 'primevue/inputtext';
+import Password from 'primevue/password';
+import Button from 'primevue/button';
+import { useRouter } from 'vue-router';
+
+const router = useRouter(); // Criar uma instância do router
+
 
 const nome = ref('');
 const email = ref('');
@@ -64,20 +73,26 @@ const termos = ref([
   // Adicione mais termos conforme necessário
 ]);
 
-// Função para lidar com o cadastro do usuário
 const handleRegister = async () => {
   if (senha.value !== senhaRepetida.value) {
     alert('As senhas não coincidem');
     return;
   }
 
+  const createUser = {
+    name: nome.value,
+    email: email.value,
+    password: senha.value,
+    courseIds: cursoSelecionado.value ? [cursoSelecionado.value.id] : [], // Enviando o ID do curso selecionado
+    currentTerm: termoSelecionado.value ? termoSelecionado.value.nome : '', // Garantindo que o termo seja enviado corretamente
+  }
+
   try {
-    const selectedCourses = [cursoSelecionado.value]; // Seleciona o curso
-    const selectedTerm = termoSelecionado.value.nome; // Seleciona o termo
-    const response = await register(nome.value, email.value, senha.value, selectedCourses, selectedTerm);
+    console.log(createUser);
+    const response = await register(createUser);
     
     if (response) {
-      alert('Cadastro realizado com sucesso!');
+      router.push('/home'); 
     }
   } catch (error) {
     alert('Erro ao realizar cadastro.');
@@ -85,6 +100,7 @@ const handleRegister = async () => {
   }
 };
 </script>
+
 
 <style scoped>
 .image {

@@ -1,5 +1,5 @@
 // curso.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
 import { Disciplina } from 'src/disciplina/entities/disciplina.entity';
 
@@ -14,7 +14,7 @@ export class Curso {
   @Column({ type: 'text' })
   description: string;
 
-  @ManyToMany(() => Usuario, (user) => user.courses)
+  @OneToMany(() => Usuario, (user) => user.curso) // Relacionamento inverso com Usuário
   users: Usuario[];
 
   @OneToMany(() => Disciplina, (discipline) => discipline.course)

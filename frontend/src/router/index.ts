@@ -5,6 +5,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/Home.vue'
 import CadMateria from '@/views/CadMateria.vue'
 
+// Método para verificar se o usuário está autenticado
+const isAuthenticated = () => {
+  return !!localStorage.getItem('authToken'); // Retorna true se o token existir
+};
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -16,44 +21,51 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: Login
     },
     {
-      path: '/Register',
+      path: '/register',
       name: 'register',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: Register
     },
     {
-      path: '/Materia',
+      path: '/materia',
       name: 'materia',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: Materia
+      component: Materia,
+      beforeEnter: (to, from, next) => {
+        if (isAuthenticated()) {
+          next(); // Se autenticado, continue para a rota
+        } else {
+          next('/login'); // Se não autenticado, redirecione para login
+        }
+      }
     },
     {
-      path: '/Home',
+      path: '/home',
       name: 'home',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: Home
+      component: Home,
+      beforeEnter: (to, from, next) => {
+        if (isAuthenticated()) {
+          next(); // Se autenticado, continue para a rota
+        } else {
+          next('/login'); // Se não autenticado, redirecione para login
+        }
+      }
     },
     {
-      path: '/CadMateria',
+      path: '/cadmateria',
       name: 'cadmateria',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: CadMateria
+      component: CadMateria,
+      beforeEnter: (to, from, next) => {
+        if (isAuthenticated()) {
+          next(); // Se autenticado, continue para a rota
+        } else {
+          next('/login'); // Se não autenticado, redirecione para login
+        }
+      }
     },
   ]
-})
+});
 
-export default router
+// Exportar o router
+export default router;
