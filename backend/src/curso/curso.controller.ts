@@ -4,6 +4,8 @@ import { CreateCursoDto } from './dto/create-curso.dto';
 import { UpdateCursoDto } from './dto/update-curso.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
+import { Curso } from './entities/curso.entity';
 
 @ApiTags('Course')
 @Controller('curso')
@@ -35,5 +37,9 @@ export class CursoController {
   @Delete(':id')
   async remove(@Param('id') id: number) {
     return await this.cursoService.remove(id);
+  }
+  @Get(':id/alunos')
+  async getAlunos(@Param('id') id: number): Promise<{ curso: Curso; alunos: Usuario[] }> {
+    return this.cursoService.getAlunosByCursoId(id);
   }
 }
