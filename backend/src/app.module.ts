@@ -9,9 +9,14 @@ import { ConfigModule } from '@nestjs/config';
 import { PostModule } from './post/post.module';
 import { MessageModule } from './message/message.module';
 import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
+    JwtModule.register({
+      secret: process.env.JWT_SECRET_KEY,
+      signOptions: { expiresIn: '1h' },
+    }),
     UsuarioModule,
     AnexoModule,
     CursoModule,
@@ -39,4 +44,4 @@ import { AuthModule } from './auth/auth.module';
   controllers: [],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

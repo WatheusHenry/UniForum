@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
-import { Curso } from 'src/curso/entities/curso.entity';
 
 export class CreateDisciplinaDto {
   @IsString()
@@ -16,5 +15,5 @@ export class CreateDisciplinaDto {
   @IsNumber()
   @IsNotEmpty()
   @ApiProperty({ example: 1, description: 'ID do curso ao qual a disciplina pertence', required: true })
-  course: Curso;
+  courseId: number; // Mudei para courseId
 }

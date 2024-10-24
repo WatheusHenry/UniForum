@@ -14,10 +14,10 @@ export class Disciplina {
   @Column({ type: 'text' })
   description: string;
 
-  @ManyToOne(() => Curso, (course) => course.disciplines, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'course_id' })
-  course: Curso;
+  @ManyToOne(() => Curso, (curso) => curso.disciplines, { eager: true })
+  curso: Curso; // Mantenha a relação com o Curso
 
   @OneToMany(() => Post, (post) => post.discipline, { onDelete: 'CASCADE' })
   posts: Post[];
+  course: any;
 }

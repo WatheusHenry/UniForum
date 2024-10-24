@@ -8,13 +8,14 @@ import { CreateUsuarioDto } from 'src/usuario/dto/create-usuario.dto';
 @Controller('auth')
 @ApiTags('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('/login')
   async signIn(@Body() signInDto: SignInDto, @Res() res: ExpressResponse) {
     const token = await this.authService.signIn(signInDto.email, signInDto.password);
-    res.setHeader('Authorization', `Bearer ${token}`).json(token);
-    res.send();
+
+    // Retorna o token no corpo da resposta, ao invés de setar no cabeçalho
+    return res.status(200).json({ token });
   }
 
   // Endpoint para registrar o usuário

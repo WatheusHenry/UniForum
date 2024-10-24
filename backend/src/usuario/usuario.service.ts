@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
@@ -9,12 +9,12 @@ import { Curso } from 'src/curso/entities/curso.entity';
 
 @Injectable()
 export class UsuarioService {
-  constructor(@InjectRepository(Usuario)
-  private readonly usuarioRepository: Repository<Usuario>,
-  @InjectRepository(Curso) 
-  private readonly cursoRepository: Repository<Curso>,
-  ) { }
-
+  constructor(
+    @InjectRepository(Usuario)
+    private readonly usuarioRepository: Repository<Usuario>,
+    @InjectRepository(Curso) 
+    private readonly cursoRepository: Repository<Curso>,
+  ) {}
 
   async create(createUsuarioDto: CreateUsuarioDto) {
     const salt = await bcrypt.genSalt(10);
@@ -23,35 +23,42 @@ export class UsuarioService {
     let curso: Curso | null = null; // Inicialize como null
   
     if (createUsuarioDto.courseIds && createUsuarioDto.courseIds.length > 0) {
-      curso = await this.cursoRepository.findOneBy({ id: createUsuarioDto.courseIds[0] }); // Assumindo que apenas um curso é selecionado
+      curso = await this.cursoRepository.findOneBy({ id: createUsuarioDto.courseIds[0] });
     }
   
     const usuario = await this.usuarioRepository.save({
       ...createUsuarioDto,
       password: hashedPassword,
-      curso, 
+      curso,
     });
   
     return usuario;
   }
   
+  async findAll() {
+    return await this.usuarioRepository.find(); // Use await para retornar a promessa
+  }
 
-  findAll() {
-    const usuario = this.usuarioRepository.find()
+  async findOneById(id: number) {
+    if (isNaN(id)) {
+      throw new BadRequestException('ID inválido');
+    }
+    const usuario = await this.usuarioRepository.findOne({ where: { id } });
+    if (!usuario) {
+      throw new NotFoundException(`Usuário com ID ${id} não encontrado`);
+    }
     return usuario;
   }
 
-  findOneById(id: number) {
-    const usuario = this.usuarioRepository.findOne({
-      where: { id }
-    })
-    return usuario;
-  }
-
-  findOneByEmail(email: string) {
-    const usuario = this.usuarioRepository.findOne({
-      where: { email }
-    })
+  async findOneByEmail(email: string) {
+    const usuario = await this.usuarioRepository.findOne({
+      where: { email },
+    });
+    
+    if (!usuario) {
+      throw new NotFoundException(`Usuário com email ${email} não encontrado`);
+    }
+    
     return usuario;
   }
 
@@ -76,7 +83,7 @@ export class UsuarioService {
       }
     });
 
-    return this.usuarioRepository.save(usuarioAtualizado);
+    return await this.usuarioRepository.save(usuarioAtualizado); // Use await
   }
 
   async updatePassword(id: number, newPassword: string) {
@@ -91,13 +98,17 @@ export class UsuarioService {
 
     usuarioExistente.password = hashedPassword;
 
-    return this.usuarioRepository.save(usuarioExistente);
+    return await this.usuarioRepository.save(usuarioExistente); // Use await
   }
 
+  async remove(id: number) {
+    const usuarioExistente = await this.findOneById(id); // Verifica se o usuário existe
 
-  remove(id: number) {
-    this.findOneById(id);
-    this.usuarioRepository.delete({ id: id });
-    return 'user deleted';
+    if (!usuarioExistente) {
+      throw new NotFoundException(`Usuário com ID ${id} não encontrado`);
+    }
+
+    await this.usuarioRepository.delete({ id }); // Use await
+    return 'Usuário deletado com sucesso';
   }
 }

@@ -17,8 +17,19 @@ export class DisciplinaService {
   ) { }
 
   async create(createDisciplinaDto: CreateDisciplinaDto): Promise<Disciplina> {
-    return await this.disciplinaRepository.save(createDisciplinaDto);
+    const curso = await this.cursoRepository.findOne({ where: { id: createDisciplinaDto.courseId } });
+    if (!curso) {
+      throw new NotFoundException(`Curso com ID ${createDisciplinaDto.courseId} não encontrado`);
+    }
+  
+    const disciplina = this.disciplinaRepository.create({
+      ...createDisciplinaDto,
+      curso,
+    });
+  
+    return await this.disciplinaRepository.save(disciplina);
   }
+
 
 
   async findAll(): Promise<Disciplina[]> {

@@ -7,7 +7,7 @@
       <div class="profile">
         <img class="profile-picture" src="../assets/images/perfil-de-usuario.png" alt="Profile Picture" />
         <div class="profile-details">
-          <p class="profile-name">Fulano da Silva</p>
+          <p class="profile-name">{{ user ? user.name : 'Carregando...' }}</p>
           <a href="#" class="view-profile">Visualizar perfil</a>
         </div>
       </div>
@@ -44,9 +44,9 @@
       <div class="fixed-subjects">
         <h3>Matérias fixadas</h3>
         <ul>
-          <li>Projeto Integrador II </li>
-          <li>Engenharia de Software</li>
-          <li>Orientação a Objetos</li>
+          <li v-for="(disciplina, index) in disciplinas" :key="index">
+            {{ disciplina.name }} <!-- Supondo que a disciplina tem um campo "name" -->
+          </li>
         </ul>
       </div>
 
@@ -147,7 +147,7 @@
       <div class="alunos-matriculados">
         <h2>Alunos matriculados</h2>
         <ul>
-          <li v-for="(aluno, index) in alunos" :key="index" :class="{ ativo: index === 0 }">
+          <li v-for="(aluno, index) in alunos.slice(0, 6)" :key="index" :class="{ ativo: index === 0 }">
             <div class="avatar"></div>
             <div class="aluno-info">
               <span>{{ aluno.name }}</span>
@@ -170,46 +170,77 @@
 
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios'; // Certifique-se de que o axios está instalado
+import axios from 'axios';
 
-export default {
-  setup() {
-    const alunos = ref([]);
-    const curso = ref({}); // Adiciona uma referência para o curso
-    const dica = ref("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim libero ullamcorper cursus finibus. Etiam eu ex tincidunt, tristique augue vitae, faucibus tellus. Sed luctus, lacus vel viverra convallis, mi odio feugiat ipsum,");
 
-    const fetchAlunos = async () => {
-      try {
-        const token = localStorage.getItem('authToken'); // Obtém o token do localStorage
+const alunos = ref([]);
+const curso = ref({});
+const disciplinas = ref([]);
+const dica = ref("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim libero ullamcorper cursus finibus. Etiam eu ex tincidunt, tristique augue vitae, faucibus tellus. Sed luctus, lacus vel viverra convallis, mi odio feugiat ipsum,");
+const user = ref()
 
-        const response = await axios.get('http://localhost:3000/curso/1/alunos', {
-          headers: {
-            Authorization: `Bearer ${token}` // Adiciona o token no cabeçalho
-          }
-        }); 
+const fetchAlunos = async () => {
+  try {
+    const token = localStorage.getItem('authToken');
 
-        // Armazena os alunos e o curso no estado
-        alunos.value = response.data.alunos; 
-        curso.value = response.data.curso; // Armazena o curso
-        console.log(alunos.value)
-      } catch (error) {
-        console.error("Erro ao buscar alunos:", error);
+    const response = await axios.get('http://localhost:3000/curso/1/alunos', {
+      headers: {
+        Authorization: `Bearer ${token}`
       }
-    };
-
-    onMounted(() => {
-      fetchAlunos();
     });
 
-    return {
-      alunos,
-      curso, // Retorna o curso para o template
-      dica
-    };
+    alunos.value = response.data.alunos;
+    curso.value = response.data.curso;
+  } catch (error) {
+    console.error("Erro ao buscar alunos:", error);
   }
 };
+
+const fetchUserData = async () => {
+  const token = localStorage.getItem('authToken');
+  const userid = localStorage.getItem('id');
+
+  try {
+    const response = await axios.get(`http://localhost:3000/user/${userid}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response.data);
+
+    user.value = response.data
+
+  } catch (error) {
+    console.error('Erro ao buscar dados do usuário:', error);
+  }
+}
+
+const fetchDisciplines = async () => {
+  const token = localStorage.getItem('authToken');
+
+  try {
+    const response = await axios.get(`http://localhost:3000/disciplina`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response.data);
+
+    disciplinas.value = response.data
+
+  } catch (error) {
+    console.error('Erro ao buscar dados do usuário:', error);
+  }
+}
+
+onMounted(() => {
+  fetchAlunos();
+  fetchUserData()
+  fetchDisciplines()
+});
+
 
 </script>
 
