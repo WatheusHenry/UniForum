@@ -1,47 +1,47 @@
 <template>
-    <div class="container">
+  <div class="container">
     <div class="container-left">
-        <div class="image">
-            <img  class= "ajuste" src="../assets/images/logoUnimar.svg">
-        </div>
-        <div class="profile">
-         <img class="profile-picture" src="../assets/images/perfil-de-usuario.png" alt="Profile Picture" />
-         <div class="profile-details">
+      <div class="image">
+        <img class="ajuste" src="../assets/images/logoUnimar.svg">
+      </div>
+      <div class="profile">
+        <img class="profile-picture" src="../assets/images/perfil-de-usuario.png" alt="Profile Picture" />
+        <div class="profile-details">
           <p class="profile-name">Fulano da Silva</p>
           <a href="#" class="view-profile">Visualizar perfil</a>
-        </div> 
         </div>
-        <div>
-            <nav class="menu">
-      <ul>
-        <li>
-          <a href="#">
-            <img src="../assets/images/home.svg"/>
-            Página Inicial
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <img src="../assets/images/msg.svg"/>
-            Matérias
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <img src="../assets/images/global.svg"/>
-            Explorar
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <img src="../assets/images/settings.svg"/>
-            Configurações
-          </a>
-        </li>
-      </ul>
-    </nav>
-        </div>
-        <div class="fixed-subjects">
+      </div>
+      <div>
+        <nav class="menu">
+          <ul>
+            <li>
+              <a href="#">
+                <img src="../assets/images/home.svg" />
+                Página Inicial
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <img src="../assets/images/msg.svg" />
+                Matérias
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <img src="../assets/images/global.svg" />
+                Explorar
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <img src="../assets/images/settings.svg" />
+                Configurações
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="fixed-subjects">
         <h3 style="margin-left: 0.7rem;">Matérias fixadas</h3>
         <ul>
           <li>Projeto Integrador II </li>
@@ -49,122 +49,100 @@
           <li>Orientação a Objetos</li>
         </ul>
       </div>
-      
+
     </div>
     <div>
-        
+
     </div>
     <div class="container-main">
-        <div class="search-container">
-            <input type="text" placeholder="Aperte a tecla “/” para pesquisar" v-model="pesquisa" />
-         </div>  
-         <main class="main-content">
-  <header class="header">
-    <img style="width: 40px;" src="../assets/images/seta-2.svg" alt="Profile Picture" />
-
-    <h1>Matérias</h1>
-    
-  </header>
-  <div class="post-container" style="display: flex; flex-wrap: wrap; gap: 20px;">
-    <div class="post" style="flex: 1 1 20rem; padding: 1rem;">
-        <div class="post-header">
-        <img style="width: 50px;" src="../assets/images/materia.svg" alt="Profile Picture" />
-        <p style="margin-top: 0.5rem;">Programação orientada a objetos</p>
+      <div class="search-container">
+        <input type="text" placeholder="Aperte a tecla “/” para pesquisar" v-model="pesquisa" />
       </div>
-      <p class="post-content">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim libero ullamcorper cursus finibus.
-      </p>
-    </div>
-    
-    <div class="post" style="flex: 1 1 20rem; padding: 1rem;">
-      <div class="post-header">
-        <img style="width: 50px;" src="../assets/images/materia.svg" alt="Profile Picture" />
-        <p style="margin-top: 0.5rem;">Laboratório de banco de dados</p>
-      </div>
-      <p class="post-content">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim libero ullamcorper cursus finibus.
-      </p>
-    </div>
-
-    <div class="post" style="flex: 1 1 20rem; padding: 1rem;">
-        <div class="post-header">
-        <img style="width: 50px;" src="../assets/images/materia.svg" alt="Profile Picture" />
-
-        <p style="margin-top: 0.5rem;">Projeto Integrador II</p>
-        
-      </div>
-      <p class="post-content">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim libero ullamcorper cursus finibus.
-      </p>
-    </div>
-
-    <div class="post" style="flex: 1 1 20rem; padding: 1rem;">
-        <div class="post-header">
-        <img style="width: 50px;" src="../assets/images/materia.svg" alt="Profile Picture" />
-        <p style="margin-top: 0.5rem;">Engenharia de Software</p>
-      </div>
-      <p class="post-content">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim libero ullamcorper cursus finibus.
-      </p>
-    </div>
-
-    <div class="post" style="flex: 1 1 20rem; padding: 1rem;">
-        <div class="post-header">
-        <img style="width: 50px;" src="../assets/images/materia.svg" alt="Profile Picture" />
-        <p style="margin-top: 0.5rem;">Aplicativos android</p>
-      </div>
-      <p class="post-content">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim libero ullamcorper cursus finibus.
-      </p>
-    </div>
-  </div>
-</main>
+      <main class="main-content">
+        <header class="header">
+          <img style="width: 40px;" src="../assets/images/seta-2.svg" alt="Profile Picture" />
+          <h1>Matérias</h1>
+        </header>
+        <div class="post-container" style="display: flex; flex-wrap: wrap; gap: 20px;">
+          <div v-for="(disciplina, index) in disciplinas" :key="index" class="post"
+            style="flex: 1 1 20rem; padding: 1rem;">
+            <div class="post-header">
+              <img style="width: 50px;" src="../assets/images/materia.svg" alt="Profile Picture" />
+              <p style="margin-top: 0.5rem;">{{ disciplina.name }}</p>
+            </div>
+            <p class="post-content">
+              {{ disciplina.description }}
+            </p>
+          </div>
+        </div>
+      </main>
 
     </div>
     <div class="container-2">
-    <div class="alunos-matriculados">
-      <h2>Alunos matriculados</h2>
-      <ul>
-        <li v-for="(aluno, index) in alunos" :key="index" :class="{ ativo: index === 0 }">
-          <div class="avatar"></div>
-          <div class="aluno-info">
-            <span>{{ aluno.nome }}</span>
-            <small>{{ aluno.status }}</small>
+      <div class="alunos-matriculados">
+        <h2>Alunos matriculados</h2>
+        <ul>
+          <li v-for="(aluno, index) in alunos" :key="index" :class="{ ativo: index === 0 }">
+            <div class="avatar"></div>
+            <div class="aluno-info">
+              <span>{{ aluno.nome }}</span>
+              <small>{{ aluno.status }}</small>
+            </div>
+          </li>
+        </ul>
+        <div class="dicas">
+          <div class="dicas-header">
+            <img src="../assets/images/dicas.svg" alt="Ícone de dicas" />
+            <h3 style="margin-top: 1rem;">Dicas</h3>
           </div>
-        </li>
-      </ul>
-      <div class="dicas">
-        <div class="dicas-header">
-          <img src="../assets/images/dicas.svg" alt="Ícone de dicas"/>
-          <h3 style="margin-top: 1rem;">Dicas</h3>
+          <p>{{ dica }}</p>
         </div>
-        <p>{{ dica }}</p>
       </div>
     </div>
+
   </div>
 
-</div>
 
-    
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      alunos: [
-        { nome: "Fulano da Silva", status: "Analise e desenvolvimento de sistemas - 2024" },
-        { nome: "Fulano da Silva", status: "Analise e desenvolvimento de sistemas - 2024" },
-        { nome: "Fulano da Silva", status: "Analise e desenvolvimento de sistemas - 2024" },
-        { nome: "Fulano da Silva", status: "Analise e desenvolvimento de sistemas - 2024" },
-        { nome: "Fulano da Silva", status: "Analise e desenvolvimento de sistemas - 2024" },
-       
-      ],
-      dica: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim libero ullamcorper cursus finibus. Etiam eu ex tincidunt, tristique augue vitae, faucibus tellus. Sed luctus, lacus vel viverra convallis, mi odio feugiat ipsum,"
-    };
-  }
-};
+<script setup>
+import axios from 'axios';
+import { onMounted, ref } from 'vue';
 
+
+const alunos = [
+  { nome: "Fulano da Silva", status: "Analise e desenvolvimento de sistemas - 2024" },
+  { nome: "Fulano da Silva", status: "Analise e desenvolvimento de sistemas - 2024" },
+  { nome: "Fulano da Silva", status: "Analise e desenvolvimento de sistemas - 2024" },
+  { nome: "Fulano da Silva", status: "Analise e desenvolvimento de sistemas - 2024" },
+  { nome: "Fulano da Silva", status: "Analise e desenvolvimento de sistemas - 2024" },
+
+]
+const dica = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim libero ullamcorper cursus finibus. Etiam eu ex tincidunt, tristique augue vitae, faucibus tellus. Sed luctus, lacus vel viverra convallis, mi odio feugiat ipsum,"
+const disciplinas = ref([]);
+
+const fetchDisciplines = async () => {
+  const token = localStorage.getItem('authToken');
+
+  try {
+    const response = await axios.get(`http://localhost:3000/disciplina`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response.data);
+
+    disciplinas.value = response.data
+
+  } catch (error) {
+    console.error('Erro ao buscar dados do usuário:', error);
+  }
+}
+
+onMounted(() => {
+
+  fetchDisciplines()
+});
 </script>
 
 <style>
@@ -172,24 +150,27 @@ export default {
   display: flex;
   background-color: #2D2D30;
 }
-.container-left{
-    background-color: #252526;
-    width: 30vh;
-    height: 100vh;
+
+.container-left {
+  background-color: #252526;
+  width: 30vh;
+  height: 100vh;
 }
 
-.image{
-    width: 50px;
-    height: 50px;
-   
+.image {
+  width: 50px;
+  height: 50px;
+
 }
-.ajuste{
-    width: 100px;
-    height: 50px;
-    margin-top: 2rem;
-    margin-left: 1rem;
-    
+
+.ajuste {
+  width: 100px;
+  height: 50px;
+  margin-top: 2rem;
+  margin-left: 1rem;
+
 }
+
 .profile {
   display: flex;
   align-items: center;
@@ -219,9 +200,10 @@ export default {
   text-decoration: none;
 
 }
-.menu{
-    margin-top: 3rem;
-    margin-left: 1rem;
+
+.menu {
+  margin-top: 3rem;
+  margin-left: 1rem;
 }
 
 .menu ul {
@@ -262,7 +244,7 @@ export default {
 
 .fixed-subjects li {
   background-color: #1E1E1E;
-  margin: 0.5rem ;
+  margin: 0.5rem;
   padding: 0.5rem;
   border-radius: 5px;
   color: white;
@@ -273,7 +255,7 @@ export default {
 .main-content {
   flex: 1;
   padding: 2rem;
-  
+
 }
 
 .header {
@@ -298,7 +280,7 @@ export default {
   display: flex;
   gap: 1rem;
 
-  
+
 }
 
 
@@ -310,14 +292,16 @@ export default {
   margin-top: 1rem;
 
 }
-.container-2{
-    margin-top: 5rem;
+
+.container-2 {
+  margin-top: 5rem;
 }
+
 .alunos-matriculados {
   color: white;
   margin-left: 2rem;
 
- 
+
 }
 
 ul {
@@ -329,7 +313,7 @@ li {
   display: flex;
   align-items: center;
   gap: 1rem;
- 
+
 }
 
 .avatar {
@@ -344,7 +328,7 @@ li {
   display: flex;
   flex-direction: column;
   margin-top: 1rem;
-  
+
 }
 
 .dicas {
@@ -386,13 +370,13 @@ li {
   border: 2px solid #BCBCBC;
   border-radius: 5px 5px 5px 5px;
   outline: none;
-  
-  
-}
-h1{
-    text-align: left;
-    margin-left: 2rem;
-    font-size: 27px
 
+
+}
+
+h1 {
+  text-align: left;
+  margin-left: 2rem;
+  font-size: 27px
 }
 </style>

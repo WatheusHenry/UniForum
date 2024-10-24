@@ -15,13 +15,13 @@
         <nav class="menu">
           <ul>
             <li>
-              <a href="#">
+              <a href="/home">
                 <img src="../assets/images/home.svg" />
                 Página Inicial
               </a>
             </li>
             <li>
-              <a href="#">
+              <a href="/cadMateria">
                 <img src="../assets/images/msg.svg" />
                 Matérias
               </a>
