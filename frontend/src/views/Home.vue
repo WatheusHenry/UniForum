@@ -1,59 +1,7 @@
 <template>
   <div class="container">
-    <div class="container-left">
-      <div class="image">
-        <img class="ajuste" src="../assets/images/logoUnimar.svg">
-      </div>
-      <div class="profile">
-        <img class="profile-picture" src="../assets/images/perfil-de-usuario.png" alt="Profile Picture" />
-        <div class="profile-details">
-          <p class="profile-name">{{ user ? user.name : 'Carregando...' }}</p>
-          <a href="#" class="view-profile">Visualizar perfil</a>
-        </div>
-      </div>
-      <div>
-        <nav class="menu">
-          <ul>
-            <li>
-              <a href="/home">
-                <img src="../assets/images/home.svg" />
-                Página Inicial
-              </a>
-            </li>
-            <li>
-              <a href="/cadMateria">
-                <img src="../assets/images/msg.svg" />
-                Matérias
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <img src="../assets/images/global.svg" />
-                Explorar
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <img src="../assets/images/settings.svg" />
-                Configurações
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <div class="fixed-subjects">
-        <h3>Matérias fixadas</h3>
-        <ul>
-          <li v-for="(disciplina, index) in disciplinas" :key="index">
-            {{ disciplina.name }} <!-- Supondo que a disciplina tem um campo "name" -->
-          </li>
-        </ul>
-      </div>
+    <SideBar/>
 
-    </div>
-    <div>
-
-    </div>
     <div class="container-main">
       <div class="search-container">
         <input type="text" placeholder="Aperte a tecla “/” para pesquisar" v-model="pesquisa" />
@@ -75,7 +23,7 @@
             Pellentesque habitant morbi tristique senectus et netus et<br>
             malesuada fames ac turpis egestas. Pellentesque ipsum nisl,
             sodales ut tortor ac, ultricies auctor justo. Maecenas in erat
-            nisl. </p>
+            nisl.</p>
           <div class="post-actions">
             <button>
               <img src="../assets/images/like.svg" />
@@ -173,6 +121,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
+import SideBar from '@/components/SideBar.vue';
 
 const alunos = ref([]);
 const curso = ref({});
