@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div style="display: flex; background-color: #2D2D30;">
     <div class="image"></div>
@@ -30,7 +31,7 @@ import { login } from '../services/authService'; // Importar o serviço de login
 
 const email = ref('');
 const senha = ref('');
-const router = useRouter(); // Criar uma instância do router
+const router = useRouter(); 
 
 const handleLogin = async () => {
   try {

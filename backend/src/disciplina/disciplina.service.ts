@@ -14,37 +14,59 @@ export class DisciplinaService {
 
     @InjectRepository(Curso)
     private cursoRepository: Repository<Curso>,
-  ) { }
+  ) {}
 
   async create(createDisciplinaDto: CreateDisciplinaDto): Promise<Disciplina> {
-    const curso = await this.cursoRepository.findOne({ where: { id: createDisciplinaDto.courseId } });
+    const curso = await this.cursoRepository.findOne({
+      where: { id: createDisciplinaDto.courseId },
+    });
     if (!curso) {
-      throw new NotFoundException(`Curso com ID ${createDisciplinaDto.courseId} não encontrado`);
+      throw new NotFoundException(
+        `Curso com ID ${createDisciplinaDto.courseId} não encontrado`,
+      );
     }
-  
+
     const disciplina = this.disciplinaRepository.create({
       ...createDisciplinaDto,
       curso,
     });
-  
+
     return await this.disciplinaRepository.save(disciplina);
   }
 
+  async findByCurso(cursoId: number): Promise<Disciplina[]> {
+    const curso = await this.cursoRepository.findOne({
+      where: { id: cursoId },
+    });
+    if (!curso) {
+      throw new NotFoundException(`Curso com ID ${cursoId} não encontrado`);
+    }
 
+    return await this.disciplinaRepository.find({
+      where: { curso: { id: cursoId } },
+      relations: ['curso'],
+    });
+  }
 
   async findAll(): Promise<Disciplina[]> {
     return await this.disciplinaRepository.find({ relations: ['curso'] });
   }
 
   async findOne(id: number): Promise<Disciplina> {
-    const disciplina = await this.disciplinaRepository.findOne({ where: { id }, relations: ['curso'] });
+    const disciplina = await this.disciplinaRepository.findOne({
+      where: { id },
+      relations: ['curso'],
+    });
     if (!disciplina) {
       throw new NotFoundException(`Disciplina com ID ${id} não encontrada`);
     }
     return disciplina;
   }
 
-  async update(id: number, updateDisciplinaDto: UpdateDisciplinaDto): Promise<Disciplina> {
+  async update(
+    id: number,
+    updateDisciplinaDto: UpdateDisciplinaDto,
+  ): Promise<Disciplina> {
     const disciplina = await this.findOne(id);
     Object.assign(disciplina, updateDisciplinaDto);
     return await this.disciplinaRepository.save(disciplina);

@@ -171,15 +171,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
-
 
 const alunos = ref([]);
 const curso = ref({});
 const disciplinas = ref([]);
+const userCourse = ref();
 const dica = ref("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim libero ullamcorper cursus finibus. Etiam eu ex tincidunt, tristique augue vitae, faucibus tellus. Sed luctus, lacus vel viverra convallis, mi odio feugiat ipsum,");
-const user = ref()
+const user = ref();
 
 const fetchAlunos = async () => {
   try {
@@ -187,8 +187,8 @@ const fetchAlunos = async () => {
 
     const response = await axios.get('http://localhost:3000/curso/1/alunos', {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     alunos.value = response.data.alunos;
@@ -208,41 +208,41 @@ const fetchUserData = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(response.data);
 
-    user.value = response.data
-
+    user.value = response.data;
   } catch (error) {
     console.error('Erro ao buscar dados do usuário:', error);
   }
-}
+};
 
 const fetchDisciplines = async () => {
   const token = localStorage.getItem('authToken');
+  userCourse.value = user.value.curso.id;
 
   try {
-    const response = await axios.get(`http://localhost:3000/disciplina`, {
+    const response = await axios.get(`http://localhost:3000/disciplina/curso/${userCourse.value}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(response.data);
-
-    disciplinas.value = response.data
-
+    disciplinas.value = response.data;
   } catch (error) {
-    console.error('Erro ao buscar dados do usuário:', error);
+    console.error('Erro ao buscar disciplinas:', error);
   }
-}
+};
+
+watch(user, (newUser) => {
+  if (newUser && newUser.curso) {
+    fetchDisciplines();
+  }
+});
 
 onMounted(() => {
   fetchAlunos();
-  fetchUserData()
-  fetchDisciplines()
+  fetchUserData();
 });
-
-
 </script>
+
 
 <style>
 .container {

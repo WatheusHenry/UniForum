@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { DisciplinaService } from './disciplina.service';
 import { CreateDisciplinaDto } from './dto/create-disciplina.dto';
 import { UpdateDisciplinaDto } from './dto/update-disciplina.dto';
@@ -10,7 +19,7 @@ import { AuthGuard } from 'src/auth/guard/auth.guard';
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
 export class DisciplinaController {
-  constructor(private readonly disciplinaService: DisciplinaService) { }
+  constructor(private readonly disciplinaService: DisciplinaService) {}
 
   @Post()
   create(@Body() createDisciplinaDto: CreateDisciplinaDto) {
@@ -27,8 +36,16 @@ export class DisciplinaController {
     return await this.disciplinaService.findOne(id);
   }
 
+  @Get('curso/:cursoId')
+  async findByCurso(@Param('cursoId') cursoId: number) {
+    return await this.disciplinaService.findByCurso(cursoId);
+  }
+
   @Patch(':id')
-  async update(@Param('id') id: number, @Body() updateDisciplinaDto: UpdateDisciplinaDto) {
+  async update(
+    @Param('id') id: number,
+    @Body() updateDisciplinaDto: UpdateDisciplinaDto,
+  ) {
     return await this.disciplinaService.update(id, updateDisciplinaDto);
   }
 

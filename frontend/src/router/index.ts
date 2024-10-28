@@ -5,9 +5,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/Home.vue'
 import CadMateria from '@/views/CadMateria.vue'
 
-// Método para verificar se o usuário está autenticado
 const isAuthenticated = () => {
-  return !!localStorage.getItem('authToken'); // Retorna true se o token existir
+  return !!localStorage.getItem('authToken'); 
 };
 
 const router = createRouter({
@@ -15,7 +14,6 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
       redirect: '/login'
     },
     {
@@ -33,23 +31,15 @@ const router = createRouter({
       name: 'materia',
       component: Materia,
       beforeEnter: (to, from, next) => {
-        if (isAuthenticated()) {
-          next(); // Se autenticado, continue para a rota
-        } else {
-          next('/login'); // Se não autenticado, redirecione para login
-        }
+        isAuthenticated() ? next() : next('/login');
       }
     },
     {
       path: '/home',
-      name: 'home',
+      name: 'homePage',
       component: Home,
       beforeEnter: (to, from, next) => {
-        if (isAuthenticated()) {
-          next(); // Se autenticado, continue para a rota
-        } else {
-          next('/login'); // Se não autenticado, redirecione para login
-        }
+        isAuthenticated() ? next() : next('/login');
       }
     },
     {
@@ -57,15 +47,10 @@ const router = createRouter({
       name: 'cadmateria',
       component: CadMateria,
       beforeEnter: (to, from, next) => {
-        if (isAuthenticated()) {
-          next(); // Se autenticado, continue para a rota
-        } else {
-          next('/login'); // Se não autenticado, redirecione para login
-        }
+        isAuthenticated() ? next() : next('/login');
       }
     },
   ]
 });
 
-// Exportar o router
 export default router;

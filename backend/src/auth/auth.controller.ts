@@ -8,11 +8,14 @@ import { CreateUsuarioDto } from 'src/usuario/dto/create-usuario.dto';
 @Controller('auth')
 @ApiTags('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('/login')
   async signIn(@Body() signInDto: SignInDto, @Res() res: ExpressResponse) {
-    const token = await this.authService.signIn(signInDto.email, signInDto.password);
+    const token = await this.authService.signIn(
+      signInDto.email,
+      signInDto.password,
+    );
 
     // Retorna o token no corpo da resposta, ao invés de setar no cabeçalho
     return res.status(200).json({ token });
@@ -20,7 +23,10 @@ export class AuthController {
 
   // Endpoint para registrar o usuário
   @Post('/register')
-  async register(@Body() createUsuarioDto: CreateUsuarioDto, @Res() res: ExpressResponse) {
+  async register(
+    @Body() createUsuarioDto: CreateUsuarioDto,
+    @Res() res: ExpressResponse,
+  ) {
     try {
       const newUser = await this.authService.register(createUsuarioDto);
       return res.status(201).json({
