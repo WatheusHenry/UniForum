@@ -24,11 +24,11 @@
             <label for="passwordRepeat">Repita sua Senha</label>
           </FloatLabel>
           <FloatLabel>
-            <Dropdown :options="cursos" v-model="cursoSelecionado" optionLabel="nome" class="dropdown-curso"/>
+            <Dropdown :options="cursos" v-model="cursoSelecionado" optionLabel="nome" class="dropdown-curso" />
             <label for="curso">Selecione seu curso</label>
           </FloatLabel>
           <FloatLabel>
-            <Dropdown :options="termos" v-model="termoSelecionado" optionLabel="nome" class="dropdown-termo"/>
+            <Dropdown :options="termos" v-model="termoSelecionado" optionLabel="nome" class="dropdown-termo" />
             <label for="termo">Selecione seu termo</label>
           </FloatLabel>
         </div>
@@ -90,9 +90,9 @@ const handleRegister = async () => {
   try {
     console.log(createUser);
     const response = await register(createUser);
-    
+
     if (response) {
-      router.push('/home'); 
+      router.push('/home');
     }
   } catch (error) {
     alert('Erro ao realizar cadastro.');
@@ -150,6 +150,7 @@ h1 {
   input {
     width: 100%;
   }
+
   width: 100%;
 }
 

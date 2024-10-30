@@ -45,7 +45,7 @@ const handleLogin = async () => {
 };
 </script>
 
-<style>
+<style scoped>
 .image {
   width: 70vw;
   height: 100vh;
