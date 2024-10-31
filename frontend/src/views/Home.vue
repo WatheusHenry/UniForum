@@ -6,7 +6,7 @@
     <div class="container-main">
       <SearchBar @update-search="pesquisa = $event" />
 
-      <main class="main-content">
+      <main class="main-content" @scroll="onScroll">
         <header class="header">
           <h1>Feed</h1>
           <button class="ask-button" @click="openModal">Perguntar +</button>
@@ -14,6 +14,8 @@
 
         <Post v-for="(post, index) in posts" :key="index" :title="post.title" :content="post.content"
           :createdAt="post.createdAt" :user="post.user" :discipline="post.discipline" />
+        <div v-if="isLoading" class="loading-indicator">Carregando...</div>
+
       </main>
     </div>
 
@@ -36,6 +38,9 @@ const posts = ref([]);
 const pesquisa = ref('');
 const user = ref();
 const isModalOpen = ref(false);
+const limit = ref(10);
+const page = ref(1);
+const isLoading = ref(false);
 
 const openModal = () => {
   isModalOpen.value = true;
@@ -74,7 +79,7 @@ onMounted(() => {
 });
 
 const token = localStorage.getItem('authToken');
-const userid = localStorage.getItem('id');
+const userid = localStorage.getItem('idUser');
 const fetchUserData = async () => {
 
   try {
@@ -92,17 +97,30 @@ const fetchUserData = async () => {
 };
 
 const fetchPosts = async () => {
+  const token = localStorage.getItem('authToken');
+
   try {
-    const response = await axios.get('http://localhost:3000/post', {
+    const response = await axios.get(`http://localhost:3000/post?page=${page.value}&limit=${limit.value}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    posts.value = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    console.log(posts.value);
+    posts.value = [...posts.value, ...response.data];
   } catch (error) {
     console.error('Erro ao buscar posts:', error);
+  }
+};
+
+
+const onScroll = async (event) => {
+  const { scrollTop, clientHeight, scrollHeight } = event.target;
+
+  if (scrollTop + clientHeight >= scrollHeight - 10 && !loading.value) {
+    loading.value = true;
+    page.value++;
+    await fetchPosts();
+    loading.value = false;
   }
 };
 </script>
@@ -173,5 +191,11 @@ const fetchPosts = async () => {
 .ask-button:active {
   background-color: #1e7e34;
   transform: scale(0.98);
+}
+
+.loading-indicator {
+  text-align: center;
+  color: white;
+  padding: 1rem;
 }
 </style>
