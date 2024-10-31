@@ -19,17 +19,17 @@
           </a>
         </li>
         <li>
-          <a href="/cadMateria">
+          <a href="/materias">
             <img src="../assets/images/msg.svg" />
             Matérias
           </a>
         </li>
-        <li>
+        <!-- <li>
           <a href="#">
             <img src="../assets/images/global.svg" />
             Explorar
           </a>
-        </li>
+        </li> -->
         <li>
           <a href="#">
             <img src="../assets/images/settings.svg" />
@@ -60,7 +60,7 @@ const userCourse = ref();
 
 const fetchUserData = async () => {
   const token = localStorage.getItem('authToken');
-  const userid = localStorage.getItem('id');
+  const userid = localStorage.getItem('idUser');
 
   try {
     const response = await axios.get(`http://localhost:3000/user/${userid}`, {
@@ -70,6 +70,8 @@ const fetchUserData = async () => {
     });
 
     user.value = response.data;
+    localStorage.setItem('idCourse', user.value.curso.id);
+
     console.log(user.value)
   } catch (error) {
     console.error('Erro ao buscar dados do usuário:', error);

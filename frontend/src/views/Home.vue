@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="container">
     <SideBar />
@@ -11,15 +12,13 @@
           <button class="ask-button" @click="openModal">Perguntar +</button>
         </header>
 
-        <!-- Lista de Posts -->
-        <Post v-for="(post, index) in posts" :key="index" :author="post.author" :content="post.content"
-          :profilePic="post.profilePic" />
+        <Post v-for="(post, index) in posts" :key="index" :title="post.title" :content="post.content"
+          :createdAt="post.createdAt" :user="post.user" :discipline="post.discipline" />
       </main>
     </div>
 
     <ListagemAlunos />
 
-    <!-- Modal de Nova Publicação -->
     <NewPostModal v-if="isModalOpen" @post-submitted="addPost" @close="closeModal" />
   </div>
 </template>
@@ -33,43 +32,50 @@ import Post from '@/components/Post.vue';
 import ListagemAlunos from '@/components/ListagemAlunos.vue';
 import NewPostModal from '@/components/NewPostModal.vue';
 
-const posts = ref([
-  {
-    author: 'Fulano da Silva',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-    profilePic: '../assets/images/perfil-de-usuario.png'
-  },
-  // Adicione outros posts aqui
-]);
-
+const posts = ref([]);
 const pesquisa = ref('');
 const user = ref();
-const isModalOpen = ref(false); // Controle de exibição do modal
+const isModalOpen = ref(false);
 
-// Função para abrir o modal
 const openModal = () => {
   isModalOpen.value = true;
 };
 
-// Função para fechar o modal
 const closeModal = () => {
   isModalOpen.value = false;
 };
 
-// Adicionar uma nova publicação ao array de posts
-const addPost = (newPost) => {
-  posts.value.unshift(newPost); // Adiciona a nova publicação ao início da lista
-  closeModal(); // Fecha o modal
+const addPost = async (newPost) => {
+  const token = localStorage.getItem('authToken');
+  const userid = localStorage.getItem('idUser');
+  const courseId = localStorage.getItem('idCourse');
+
+
+  newPost.user = { id: userid };
+  newPost.discipline = { id: courseId };
+
+  try {
+    const response = await axios.post('http://localhost:3000/post', newPost, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    posts.value.unshift(response.data);
+    closeModal();
+  } catch (error) {
+    console.error('Erro ao adicionar a publicação:', error);
+  }
 };
 
-// Funções de busca de dados
 onMounted(() => {
   fetchUserData();
+  fetchPosts();
 });
 
+const token = localStorage.getItem('authToken');
+const userid = localStorage.getItem('id');
 const fetchUserData = async () => {
-  const token = localStorage.getItem('authToken');
-  const userid = localStorage.getItem('id');
 
   try {
     const response = await axios.get(`http://localhost:3000/user/${userid}`, {
@@ -78,18 +84,35 @@ const fetchUserData = async () => {
       },
     });
 
+
     user.value = response.data;
   } catch (error) {
     console.error('Erro ao buscar dados do usuário:', error);
+  }
+};
+
+const fetchPosts = async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/post', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    posts.value = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    console.log(posts.value);
+  } catch (error) {
+    console.error('Erro ao buscar posts:', error);
   }
 };
 </script>
 
 <style scoped>
 .container-main {
-  margin-top: 1rem;
+  padding-top: 1rem;
   height: 100vh;
   overflow-y: auto;
+  overflow-x: hidden;
   width: 60%;
 }
 
@@ -130,6 +153,7 @@ const fetchUserData = async () => {
   justify-content: space-between;
   align-items: center;
 }
+
 .ask-button {
   background-color: #28a745;
   color: white;

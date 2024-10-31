@@ -1,6 +1,6 @@
 import Register from '@/views/Register.vue'
 import Login from '../views/Login.vue'
-import Materia from '@/views/Materia.vue'
+import Materia from '@/views/MateriaPublications.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/Home.vue'
 import CadMateria from '@/views/CadMateria.vue'
@@ -43,8 +43,8 @@ const router = createRouter({
       }
     },
     {
-      path: '/cadmateria',
-      name: 'cadmateria',
+      path: '/materias',
+      name: 'materias',
       component: CadMateria,
       beforeEnter: (to, from, next) => {
         isAuthenticated() ? next() : next('/login');

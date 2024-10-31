@@ -1,5 +1,11 @@
 // disciplina.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { Curso } from 'src/curso/entities/curso.entity';
 import { Post } from 'src/post/entities/post.entity';
 
@@ -19,5 +25,4 @@ export class Disciplina {
 
   @OneToMany(() => Post, (post) => post.discipline, { onDelete: 'CASCADE' })
   posts: Post[];
-  course: any;
 }

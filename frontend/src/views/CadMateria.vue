@@ -2,95 +2,52 @@
   <div class="container">
     <SideBar/>
     <div class="container-main">
-      <div class="search-container">
-        <input type="text" placeholder="Aperte a tecla “/” para pesquisar" v-model="pesquisa" />
-      </div>
+      <SearchBar/>
       <main class="main-content">
         <header class="header">
-          <img style="width: 40px;" src="../assets/images/seta-2.svg" alt="Profile Picture" />
           <h1>Matérias</h1>
         </header>
-        <div class="post-container" style="display: flex; flex-wrap: wrap; gap: 20px;">
-          <div v-for="(disciplina, index) in disciplinas" :key="index" class="post"
-            style="flex: 1 1 20rem; padding: 1rem;">
+        <div class="post-container">
+          <div v-for="(disciplina, index) in disciplinas" :key="index" class="post">
             <div class="post-header">
-              <img style="width: 50px;" src="../assets/images/materia.svg" alt="Profile Picture" />
-              <p style="margin-top: 0.5rem;">{{ disciplina.name }}</p>
+              <img class="icon" src="../assets/images/materia.svg" alt="Matéria" />
+              <p class="post-title">{{ disciplina.name }}</p>
             </div>
-            <p class="post-content">
-              {{ disciplina.description }}
-            </p>
+            <p class="post-content">{{ disciplina.description }}</p>
           </div>
         </div>
       </main>
-
     </div>
-    <div class="container-2">
-      <div class="alunos-matriculados">
-        <h2>Alunos matriculados</h2>
-        <ul>
-          <li v-for="(aluno, index) in alunos" :key="index" :class="{ ativo: index === 0 }">
-            <div class="avatar"></div>
-            <div class="aluno-info">
-              <span>{{ aluno.nome }}</span>
-              <small>{{ aluno.status }}</small>
-            </div>
-          </li>
-        </ul>
-        <div class="dicas">
-          <div class="dicas-header">
-            <img src="../assets/images/dicas.svg" alt="Ícone de dicas" />
-            <h3 style="margin-top: 1rem;">Dicas</h3>
-          </div>
-          <p>{{ dica }}</p>
-        </div>
-      </div>
-    </div>
-
+    <ListagemAlunos/>
   </div>
-
-
 </template>
 
 <script setup>
+import ListagemAlunos from '@/components/ListagemAlunos.vue';
+import SearchBar from '@/components/SearchBar.vue';
 import SideBar from '@/components/SideBar.vue';
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
-
-
-const alunos = [
-  { nome: "Fulano da Silva", status: "Analise e desenvolvimento de sistemas - 2024" },
-  { nome: "Fulano da Silva", status: "Analise e desenvolvimento de sistemas - 2024" },
-  { nome: "Fulano da Silva", status: "Analise e desenvolvimento de sistemas - 2024" },
-  { nome: "Fulano da Silva", status: "Analise e desenvolvimento de sistemas - 2024" },
-  { nome: "Fulano da Silva", status: "Analise e desenvolvimento de sistemas - 2024" },
-
-]
-const dica = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim libero ullamcorper cursus finibus. Etiam eu ex tincidunt, tristique augue vitae, faucibus tellus. Sed luctus, lacus vel viverra convallis, mi odio feugiat ipsum,"
+const pesquisa = ref("");
 const disciplinas = ref([]);
 
 const fetchDisciplines = async () => {
   const token = localStorage.getItem('authToken');
-
   try {
-    const response = await axios.get(`http://localhost:3000/disciplina`, {
+    const response = await axios.get(`http://localhost:3000/disciplina/curso/1`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(response.data);
-
-    disciplinas.value = response.data
-
+    disciplinas.value = response.data;
   } catch (error) {
-    console.error('Erro ao buscar dados do usuário:', error);
+    console.error('Erro ao buscar disciplinas:', error);
   }
 }
 
 onMounted(() => {
-
-  fetchDisciplines()
+  fetchDisciplines();
 });
 </script>
 
@@ -98,215 +55,99 @@ onMounted(() => {
 .container {
   display: flex;
   background-color: #2D2D30;
-}
-
-.container-left {
-  background-color: #252526;
-  width: 30vh;
   height: 100vh;
+  overflow: auto;
 }
 
-.image {
-  width: 50px;
-  height: 50px;
-
-}
-
-.ajuste {
-  width: 100px;
-  height: 50px;
-  margin-top: 2rem;
-  margin-left: 1rem;
-
-}
-
-.profile {
+.container-main {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.profile-picture {
-  width: 50px;
-  height: 50px;
-  margin-top: 4rem;
-  margin-left: 0.60rem;
-
-}
-
-.profile-details {
-  color: white;
-  margin-top: 4rem;
-}
-
-.profile-name {
-  font-weight: bold;
-}
-
-.view-profile {
-  color: #ccc;
-  font-size: 0.9rem;
-  text-decoration: none;
-
-}
-
-.menu {
-  margin-top: 3rem;
-  margin-left: 1rem;
-}
-
-.menu ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.menu li {
-  margin: 1rem 0;
-}
-
-.menu a {
-  color: white;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 1.1rem;
-}
-
-.menu a:hover {
-  color: #ccc;
-}
-
-.fixed-subjects {
-  margin-top: 2rem;
-  margin-left: 0.5srem;
-}
-
-.fixed-subjects h3 {
-  color: white;
-}
-
-.fixed-subjects ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.fixed-subjects li {
-  background-color: #1E1E1E;
-  margin: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 5px;
-  color: white;
-  width: 25vh;
-  height: auto;
-}
-
-.main-content {
-  flex: 1;
-  padding: 2rem;
-
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-
-
-.post {
-  background-color: #1E1E1E;
-  padding: 1rem;
-  margin-top: 2rem;
-  border-radius: 5px;
-  color: white;
   width: 60%;
-
-}
-
-.post-header {
-  display: flex;
-  gap: 1rem;
-
-
-}
-
-
-
-.post-actions button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  margin-top: 1rem;
-
-}
-
-.container-2 {
-  margin-top: 5rem;
-}
-
-.alunos-matriculados {
-  color: white;
-  margin-left: 2rem;
-
-
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-
-}
-
-.avatar {
-  width: 40px;
-  height: 40px;
-  background-color: #555;
-  border-radius: 50%;
-  margin-top: 1rem;
-}
-
-.aluno-info {
-  display: flex;
   flex-direction: column;
-  margin-top: 1rem;
-
+  /* flex: 1; */
+  overflow-y: auto;
 }
-
-
-
-
-
 
 .search-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin-top: 1rem;
+  margin: 1rem 0;
 }
 
 .search-container input[type="text"] {
   width: 50%;
-  background-color: #292A2F;
-  padding: 5px;
+  padding: 10px;
   font-size: 15px;
+  background-color: #292A2F;
   border: 2px solid #BCBCBC;
-  border-radius: 5px 5px 5px 5px;
+  border-radius: 5px;
   outline: none;
-
-
+  color: #fff;
 }
 
-h1 {
-  text-align: left;
-  margin-left: 2rem;
-  font-size: 27px
+.main-content {
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  color: #fff;
+}
+
+.back-arrow {
+  width: 40px;
+}
+
+.post-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.post {
+  background-color: #1E1E1E;
+  padding: 1rem;
+  border-radius: 8px;
+  color: #fff;
+  flex: 1 1 280px;
+  min-width: 250px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.post:hover {
+  transform: translateY(-5px);
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.icon {
+  width: 50px;
+}
+
+.post-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.post-content {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: #B0B0B0;
+  line-height: 1.5;
+}
+
+.action-button:hover {
+  background-color: #333;
 }
 </style>

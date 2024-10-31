@@ -13,7 +13,8 @@ export async function login(email: string, password: string) {
     if (response.data) {
       console.log(response.data)
       localStorage.setItem('authToken', response.data.token.access_token);
-      localStorage.setItem('id', response.data.token.userId);
+      localStorage.setItem('idUser', response.data.token.userId);
+
     }
 
     return response.data;

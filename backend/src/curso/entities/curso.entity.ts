@@ -17,6 +17,6 @@ export class Curso {
   @OneToMany(() => Usuario, (user) => user.curso) // Relacionamento inverso com Usuário
   users: Usuario[];
 
-  @OneToMany(() => Disciplina, (discipline) => discipline.course)
+  @OneToMany(() => Disciplina, (discipline) => discipline.curso)
   disciplines: Disciplina[];
 }
