@@ -29,7 +29,6 @@ import SideBar from '@/components/SideBar.vue';
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
-const pesquisa = ref("");
 const disciplinas = ref([]);
 
 const fetchDisciplines = async () => {

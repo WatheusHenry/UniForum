@@ -7,25 +7,18 @@
       </header>
 
       <div class="modal-body">
-        <input
-          type="text"
-          v-model="post.title"
-          placeholder="Título"
-          class="input-field"
-          required
-        />
-        <textarea
-          v-model="post.content"
-          placeholder="Conteúdo"
-          class="input-field textarea"
-          required
-        ></textarea>
-        <input
-          type="file"
-          @change="onImageSelect"
-          accept="image/*"
-          class="input-field file-input"
-        />
+        <input type="text" v-model="post.title" placeholder="Título" class="input-field" required />
+        <textarea v-model="post.content" placeholder="Conteúdo" class="input-field textarea" required></textarea>
+
+        <!-- Dropdown para selecionar a disciplina -->
+        <select v-model="post.discipline" class="input-field">
+          <option disabled value="">Selecione uma disciplina</option>
+          <option v-for="discipline in disciplines" :key="discipline.id" :value="discipline.id">
+            {{ discipline.name }}
+          </option>
+        </select>
+
+        <input type="file" @change="onImageSelect" accept="image/*" class="input-field file-input" />
         <div v-if="post.profilePic" class="image-preview">
           <img :src="post.profilePic" alt="Imagem selecionada" />
         </div>
@@ -40,19 +33,26 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from 'vue';
+import { ref, defineEmits, onMounted } from 'vue';
+import axios from 'axios';
 
 const emit = defineEmits(['post-submitted', 'close']);
 
 const isVisible = ref(true);
+const cursoId = localStorage.getItem('idCourse')
+const token = localStorage.getItem('authToken')
+
 const post = ref({
   title: '',
   content: '',
-  createdAt: new Date().toISOString(), // Adicionando data de criação
-  user: null, // O usuário será atribuído ao fazer o post
-  discipline: null, // A disciplina também será atribuída
+  createdAt: new Date().toISOString(),
+  user: null,
+  discipline: null,
   profilePic: null,
 });
+
+// Lista de disciplinas
+const disciplines = ref([]);
 
 const closeModal = () => {
   emit('close');
@@ -63,10 +63,25 @@ const closeModal = () => {
 const resetForm = () => {
   post.value.title = '';
   post.value.content = '';
-  post.value.createdAt = new Date().toISOString(); // Resetar data
+  post.value.createdAt = new Date().toISOString();
   post.value.user = null;
   post.value.discipline = null;
   post.value.profilePic = null;
+};
+
+// Função para buscar disciplinas
+const fetchDisciplines = async () => {
+  try {
+    const response = await axios.get(`http://localhost:3000/disciplina/curso/${cursoId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response.data)
+    disciplines.value = response.data;
+  } catch (error) {
+    console.error('Erro ao buscar disciplinas:', error);
+  }
 };
 
 const onImageSelect = (event) => {
@@ -78,7 +93,7 @@ const onImageSelect = (event) => {
 
 const submitPost = () => {
   // Validar se os campos obrigatórios estão preenchidos
-  if (!post.value.title || !post.value.content) {
+  if (!post.value.title || !post.value.content || !post.value.discipline) {
     alert('Por favor, preencha todos os campos.');
     return;
   }
@@ -89,9 +104,12 @@ const submitPost = () => {
   // Fechar o modal e resetar o formulário
   closeModal();
 };
+
+// Chama a função de busca de disciplinas quando o componente é montado
+onMounted(() => {
+  fetchDisciplines();
+});
 </script>
-
-
 
 <style scoped>
 .modal-overlay {

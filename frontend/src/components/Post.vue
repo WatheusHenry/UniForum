@@ -2,7 +2,7 @@
 <template>
   <div class="post">
     <div class="post-header">
-      <img :src="userProfilePic" alt="Profile Picture" class="profile-pic" />
+      <img :src="'https://placehold.co/400'" alt="Profile Picture" class="profile-pic" />
       <div class="post-info">
         <p class="post-author">{{ userName }}</p>
         <p class="post-discipline">{{ disciplineName }}</p>
@@ -32,7 +32,7 @@ const props = defineProps({
   title: String,
   content: String,
   createdAt: String,
-  user: Object, 
+  user: Object,
   discipline: Object,
 });
 
@@ -111,13 +111,19 @@ const formattedDate = computed(() => {
   margin-top: 1rem;
   font-size: 0.95rem;
   line-height: 1.5;
-  overflow-wrap: break-word; /* Garante que palavras longas quebrem */
-  word-wrap: break-word; /* Compatibilidade com navegadores mais antigos */
-  overflow: hidden; /* Oculta texto que não cabe */
-  max-height: 100px; /* Define uma altura máxima */
-  display: -webkit-box; /* Para limitar o número de linhas */
-  -webkit-box-orient: vertical; 
-  line-clamp: 5; /* Número máximo de linhas a serem exibidas */
+  overflow-wrap: break-word;
+  /* Garante que palavras longas quebrem */
+  word-wrap: break-word;
+  /* Compatibilidade com navegadores mais antigos */
+  overflow: hidden;
+  /* Oculta texto que não cabe */
+  max-height: 100px;
+  /* Define uma altura máxima */
+  display: -webkit-box;
+  /* Para limitar o número de linhas */
+  -webkit-box-orient: vertical;
+  line-clamp: 5;
+  /* Número máximo de linhas a serem exibidas */
 }
 
 .post-actions {

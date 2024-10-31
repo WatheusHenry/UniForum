@@ -57,7 +57,7 @@ const addPost = async (newPost) => {
 
 
   newPost.user = { id: userid };
-  newPost.discipline = { id: courseId };
+  newPost.course = { id: courseId };
 
   try {
     const response = await axios.post('http://localhost:3000/post', newPost, {

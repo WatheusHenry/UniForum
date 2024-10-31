@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
 import { Disciplina } from 'src/disciplina/entities/disciplina.entity';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
 
@@ -12,9 +13,9 @@ export class CreatePostDto {
   @ApiProperty({ required: true })
   createdAt: Date;
 
-  @ApiProperty({ required: true })
-  user: Usuario;
+  @IsNotEmpty()
+  userId: number; // ou o tipo que representa seu usuário
 
-  @ApiProperty({ required: true })
-  discipline: Disciplina;
+  @IsNotEmpty()
+  disciplineId: number;
 }

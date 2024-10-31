@@ -14,7 +14,20 @@ export class PostService {
   ) {}
 
   async create(createPostDto: CreatePostDto) {
-    const post = await this.postRepository.save(createPostDto);
+    // Certifique-se de que você está passando o usuário corretamente
+    const { userId, disciplineId, ...rest } = createPostDto;
+
+    // Você pode precisar buscar as entidades relacionadas antes de criar o post
+    const user = await this.userRepository.findOne(userId); // Certifique-se de ter o repositório do usuário injetado
+    const discipline = await this.disciplineRepository.findOne(disciplineId); // Certifique-se de ter o repositório da disciplina injetado
+
+    const post = this.postRepository.create({
+      ...rest,
+      user,
+      discipline,
+    });
+
+    await this.postRepository.save(post);
     return this.postRepository.findOne({
       where: { id: post.id },
       relations: ['user', 'discipline'],
