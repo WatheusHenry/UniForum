@@ -19,7 +19,6 @@
     emit('update-search', searchQuery.value);
   };
   
-  // Atalho para focar na barra de pesquisa ao pressionar "/"
   onMounted(() => {
     document.addEventListener('keydown', (event) => {
       if (event.key === '/') {

@@ -24,12 +24,6 @@
             Matérias
           </a>
         </li>
-        <!-- <li>
-          <a href="#">
-            <img src="../assets/images/global.svg" />
-            Explorar
-          </a>
-        </li> -->
         <li>
           <a href="#">
             <img src="../assets/images/settings.svg" />
@@ -51,60 +45,33 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import axios from 'axios';
+import { fetchUserData } from '@/services/userService';
+import { fetchDisciplinesByCourse } from '@/services/disciplineService';
 
 const disciplinas = ref([]);
 const user = ref({});
-const userCourse = ref();
 
-
-const fetchUserData = async () => {
-  const token = localStorage.getItem('authToken');
+const loadUserData = async () => {
   const userid = localStorage.getItem('idUser');
-
-  try {
-    const response = await axios.get(`http://localhost:3000/user/${userid}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    user.value = response.data;
-    localStorage.setItem('idCourse', user.value.curso.id);
-
-    console.log(user.value)
-  } catch (error) {
-    console.error('Erro ao buscar dados do usuário:', error);
-  }
+  user.value = await fetchUserData(userid);
+  localStorage.setItem('idCourse', user.value.curso.id);
 };
 
-const fetchDisciplines = async () => {
-  const token = localStorage.getItem('authToken');
-  userCourse.value = user.value.curso.id;
-
-  try {
-    const response = await axios.get(`http://localhost:3000/disciplina/curso/${userCourse.value}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    disciplinas.value = response.data;
-  } catch (error) {
-    console.error('Erro ao buscar disciplinas:', error);
-  }
+const loadDisciplines = async () => {
+  const userCourseId = user.value.curso.id;
+  disciplinas.value = await fetchDisciplinesByCourse(userCourseId);
 };
-
 
 onMounted(() => {
-  fetchUserData();
+  loadUserData();
   watch(user, (newUser) => {
     if (newUser && newUser.curso) {
-      fetchDisciplines();
+      loadDisciplines();
     }
   });
-
 });
 </script>
+
 
 <style scoped>
 .sidebar {
@@ -163,8 +130,10 @@ onMounted(() => {
 
 .menu {
   padding: 15px;
-  width: 200px; /* Largura do menu */
-  height:fit-content; /* Altura para ocupar a tela inteira */
+  width: 200px;
+  /* Largura do menu */
+  height: fit-content;
+  /* Altura para ocupar a tela inteira */
 }
 
 .menu ul {
@@ -172,31 +141,37 @@ onMounted(() => {
   padding: 0;
   margin: 0;
   display: flex;
-  flex-direction: column; /* Organiza os itens verticalmente */
+  flex-direction: column;
+  /* Organiza os itens verticalmente */
 }
 
 .menu ul li {
-  margin-bottom: 10px; /* Espaçamento entre os itens */
+  margin-bottom: 10px;
+  /* Espaçamento entre os itens */
 }
 
 .menu ul li a {
-  color: #fff; /* Cor do texto */
+  color: #fff;
+  /* Cor do texto */
   text-decoration: none;
   font-size: 16px;
   display: flex;
   align-items: center;
-  gap: 8px; /* Espaçamento entre o ícone e o texto */
+  gap: 8px;
+  /* Espaçamento entre o ícone e o texto */
   padding: 10px;
   border-radius: 5px;
   transition: background-color 0.3s ease;
 }
 
 .menu ul li a:hover {
-  background-color: #555; /* Cor de fundo ao passar o mouse */
+  background-color: #555;
+  /* Cor de fundo ao passar o mouse */
 }
 
 .menu ul li a img {
-  width: 24px; /* Tamanho do ícone */
+  width: 24px;
+  /* Tamanho do ícone */
   height: 24px;
 }
 
@@ -234,5 +209,4 @@ onMounted(() => {
   color: #ffffff;
   cursor: pointer;
 }
-
 </style>

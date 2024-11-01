@@ -10,10 +10,9 @@
         <input type="text" v-model="post.title" placeholder="Título" class="input-field" required />
         <textarea v-model="post.content" placeholder="Conteúdo" class="input-field textarea" required></textarea>
 
-        <!-- Dropdown para selecionar a disciplina -->
         <select v-model="post.discipline" class="input-field">
           <option disabled value="">Selecione uma disciplina</option>
-          <option v-for="discipline in disciplines" :key="discipline.id" :value="discipline.id">
+          <option placeholder="Selecione a disciplina" v-for="discipline in disciplines" :key="discipline.id" :value="discipline.id">
             {{ discipline.name }}
           </option>
         </select>
@@ -33,14 +32,13 @@
 </template>
 
 <script setup>
+import { fetchDisciplinesByCourse } from '@/services/disciplineService';
 import { ref, defineEmits, onMounted } from 'vue';
-import axios from 'axios';
 
 const emit = defineEmits(['post-submitted', 'close']);
 
 const isVisible = ref(true);
-const cursoId = localStorage.getItem('idCourse')
-const token = localStorage.getItem('authToken')
+const cursoId = localStorage.getItem('idCourse');
 
 const post = ref({
   title: '',
@@ -51,7 +49,6 @@ const post = ref({
   profilePic: null,
 });
 
-// Lista de disciplinas
 const disciplines = ref([]);
 
 const closeModal = () => {
@@ -69,18 +66,11 @@ const resetForm = () => {
   post.value.profilePic = null;
 };
 
-// Função para buscar disciplinas
-const fetchDisciplines = async () => {
+const loadDisciplines = async () => {
   try {
-    const response = await axios.get(`http://localhost:3000/disciplina/curso/${cursoId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    console.log(response.data)
-    disciplines.value = response.data;
+    disciplines.value = await fetchDisciplinesByCourse(cursoId);
   } catch (error) {
-    console.error('Erro ao buscar disciplinas:', error);
+    alert('Erro ao carregar disciplinas. Por favor, tente novamente mais tarde.');
   }
 };
 
@@ -92,22 +82,17 @@ const onImageSelect = (event) => {
 };
 
 const submitPost = () => {
-  // Validar se os campos obrigatórios estão preenchidos
   if (!post.value.title || !post.value.content || !post.value.discipline) {
     alert('Por favor, preencha todos os campos.');
     return;
   }
 
-  // Emitir o evento com os dados da publicação
   emit('post-submitted', { ...post.value });
-
-  // Fechar o modal e resetar o formulário
   closeModal();
 };
 
-// Chama a função de busca de disciplinas quando o componente é montado
 onMounted(() => {
-  fetchDisciplines();
+  loadDisciplines();
 });
 </script>
 

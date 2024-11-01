@@ -1,33 +1,29 @@
-<!-- eslint-disable vue/multi-word-component-names -->
+<!-- eslint-disable vue/no-deprecated-v-on-native-modifier -->
 <template>
   <div class="container">
     <SideBar />
-
-    <div class="container-main">
+    <div class="container-main" @scroll.native="onScroll">
       <SearchBar @update-search="pesquisa = $event" />
-
-      <main class="main-content" @scroll="onScroll">
+      <main class="main-content">
         <header class="header">
           <h1>Feed</h1>
           <button class="ask-button" @click="openModal">Perguntar +</button>
         </header>
-
         <Post v-for="(post, index) in posts" :key="index" :title="post.title" :content="post.content"
-          :createdAt="post.createdAt" :user="post.user" :discipline="post.discipline" />
-        <div v-if="isLoading" class="loading-indicator">Carregando...</div>
+          :createdAt="post.createdAt" :user="post.user" :discipline="post.discipline" :id="post.id" />
 
+        <div v-if="isLoading" class="loading-indicator">Carregando...</div>
       </main>
     </div>
-
     <ListagemAlunos />
-
-    <NewPostModal v-if="isModalOpen" @post-submitted="addPost" @close="closeModal" />
+    <NewPostModal v-if="isModalOpen" @post-submitted="handleAddPost" @close="closeModal" />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import { fetchPosts, addPost } from '@/services/postService';
+import { fetchUserData } from '@/services/userService';
 import SideBar from '@/components/SideBar.vue';
 import SearchBar from '@/components/SearchBar.vue';
 import Post from '@/components/Post.vue';
@@ -50,80 +46,76 @@ const closeModal = () => {
   isModalOpen.value = false;
 };
 
-const addPost = async (newPost) => {
-  const token = localStorage.getItem('authToken');
+const handleAddPost = async (newPost) => {
   const userid = localStorage.getItem('idUser');
   const courseId = localStorage.getItem('idCourse');
-
 
   newPost.user = { id: userid };
   newPost.course = { id: courseId };
 
   try {
-    const response = await axios.post('http://localhost:3000/post', newPost, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    posts.value.unshift(response.data);
+    const createdPost = await addPost(newPost);
+    posts.value.unshift(createdPost);
     closeModal();
   } catch (error) {
     console.error('Erro ao adicionar a publicação:', error);
   }
 };
 
-onMounted(() => {
-  fetchUserData();
-  fetchPosts();
-});
-
-const token = localStorage.getItem('authToken');
-const userid = localStorage.getItem('idUser');
-const fetchUserData = async () => {
-
+const loadUserData = async () => {
+  const userid = localStorage.getItem('idUser');
   try {
-    const response = await axios.get(`http://localhost:3000/user/${userid}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-
-    user.value = response.data;
+    user.value = await fetchUserData(userid);
   } catch (error) {
     console.error('Erro ao buscar dados do usuário:', error);
   }
 };
 
-const fetchPosts = async () => {
-  const token = localStorage.getItem('authToken');
-
+const loadPosts = async () => {
   try {
-    const response = await axios.get(`http://localhost:3000/post?page=${page.value}&limit=${limit.value}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const fetchedPosts = await fetchPosts(page.value, limit.value);
+    if (fetchedPosts.length === 0) {
+      return;
+    }
 
-    posts.value = [...posts.value, ...response.data];
+    posts.value = [...posts.value, ...fetchedPosts];
+    console.log(posts.value)
+
   } catch (error) {
-    console.error('Erro ao buscar posts:', error);
+    console.error("Erro ao buscar posts:", error);
   }
 };
-
 
 const onScroll = async (event) => {
-  const { scrollTop, clientHeight, scrollHeight } = event.target;
 
-  if (scrollTop + clientHeight >= scrollHeight - 10 && !loading.value) {
-    loading.value = true;
+  const target = event.target;
+  const { scrollTop, clientHeight, scrollHeight } = target;
+
+  console.log(`scrollTop: ${scrollTop}, clientHeight: ${clientHeight}, scrollHeight: ${scrollHeight}`);
+
+  if (scrollTop + clientHeight >= scrollHeight - 10 && !isLoading.value) {
+    isLoading.value = true;
     page.value++;
-    await fetchPosts();
-    loading.value = false;
+
+    try {
+      await loadPosts();
+    } catch (error) {
+      console.error("Erro ao carregar mais posts:", error);
+    } finally {
+      isLoading.value = false;
+    }
   }
 };
+
+
+
+onMounted(() => {
+  loadUserData();
+  loadPosts();
+});
 </script>
+
+
 
 <style scoped>
 .container-main {
@@ -163,6 +155,9 @@ const onScroll = async (event) => {
 .main-content {
   width: 90%;
   margin: auto;
+  min-height: 150vh;
+  /* Exemplo de altura mínima para permitir rolagem */
+
 }
 
 .header {

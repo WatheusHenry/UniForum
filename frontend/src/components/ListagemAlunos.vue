@@ -15,7 +15,7 @@
                 <img src="../assets/images/dicas.svg" alt="Ícone de dicas" />
                 <h3 style="margin-top: 1rem;">Dicas</h3>
             </div>
-            <p>{{ dica }}</p>
+            <p>Dica ai né viado</p>
         </div>
     </div>
 </template>

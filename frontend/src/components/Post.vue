@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <div class="post">
+  <div class="post" @click="goToDetail">
     <div class="post-header">
       <img :src="'https://placehold.co/400'" alt="Profile Picture" class="profile-pic" />
       <div class="post-info">
@@ -27,8 +27,14 @@
 
 <script setup>
 import { defineProps, computed } from 'vue';
+import { useRouter } from 'vue-router';
+
+
+const router = useRouter();
+
 
 const props = defineProps({
+  id: Number, // Adicione o id aqui
   title: String,
   content: String,
   createdAt: String,
@@ -37,7 +43,6 @@ const props = defineProps({
 });
 
 const userName = computed(() => props.user?.name || "Usuário Desconhecido");
-const userProfilePic = computed(() => props.user?.profilePic || "default-pic-url.jpg");
 const disciplineName = computed(() => props.discipline?.name || "Disciplina Desconhecida");
 
 const formattedDate = computed(() => {
@@ -50,6 +55,11 @@ const formattedDate = computed(() => {
     minute: "2-digit",
   });
 });
+
+
+const goToDetail = () => {
+  router.push({ name: 'postDetail', params: { id: props.id } });
+};
 </script>
 
 <style scoped>
@@ -57,6 +67,7 @@ const formattedDate = computed(() => {
   background-color: #1e1e1e;
   padding: 1.5rem;
   margin-top: 2rem;
+  margin-bottom: 2rem;
   border-radius: 10px;
   color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);

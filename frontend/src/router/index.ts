@@ -1,13 +1,15 @@
-import Register from '@/views/Register.vue'
-import Login from '../views/Login.vue'
+import Register from '@/views/RegisterView.vue'
+import Login from '../views/LoginView.vue'
 import Materia from '@/views/MateriaPublications.vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/views/Home.vue'
-import CadMateria from '@/views/CadMateria.vue'
+import Home from '@/views/HomeView.vue'
+import CadMateria from '@/views/MateriasView.vue'
+import PostDetailView from '@/views/PostDetailView.vue'
+
 
 const isAuthenticated = () => {
-  return !!localStorage.getItem('authToken'); 
-};
+  return !!localStorage.getItem('authToken')
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,7 +33,7 @@ const router = createRouter({
       name: 'materia',
       component: Materia,
       beforeEnter: (to, from, next) => {
-        isAuthenticated() ? next() : next('/login');
+        isAuthenticated() ? next() : next('/login')
       }
     },
     {
@@ -39,7 +41,7 @@ const router = createRouter({
       name: 'homePage',
       component: Home,
       beforeEnter: (to, from, next) => {
-        isAuthenticated() ? next() : next('/login');
+        isAuthenticated() ? next() : next('/login')
       }
     },
     {
@@ -47,10 +49,18 @@ const router = createRouter({
       name: 'materias',
       component: CadMateria,
       beforeEnter: (to, from, next) => {
-        isAuthenticated() ? next() : next('/login');
+        isAuthenticated() ? next() : next('/login')
       }
     },
+    {
+      path: '/post/:id',
+      name: 'postDetail',
+      component: PostDetailView,
+      beforeEnter: (to, from, next) => {
+        isAuthenticated() ? next() : next('/login')
+      }
+    }
   ]
-});
+})
 
-export default router;
+export default router
