@@ -5,21 +5,29 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
 import { Repository } from 'typeorm';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
+import { Disciplina } from 'src/disciplina/entities/disciplina.entity';
 
 @Injectable()
 export class PostService {
   constructor(
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
+    @InjectRepository(Usuario)
+    private readonly usuarioRepository: Repository<Usuario>,
+    @InjectRepository(Disciplina)
+    private readonly disciplinaRepository: Repository<Disciplina>,
   ) {}
 
   async create(createPostDto: CreatePostDto) {
-    // Certifique-se de que você está passando o usuário corretamente
     const { userId, disciplineId, ...rest } = createPostDto;
 
-    // Você pode precisar buscar as entidades relacionadas antes de criar o post
-    const user = await this.userRepository.findOne(userId); // Certifique-se de ter o repositório do usuário injetado
-    const discipline = await this.disciplineRepository.findOne(disciplineId); // Certifique-se de ter o repositório da disciplina injetado
+    const user = await this.usuarioRepository.findOne({
+      where: { id: userId },
+    });
+    const discipline = await this.disciplinaRepository.findOne({
+      where: { id: disciplineId },
+    });
 
     const post = this.postRepository.create({
       ...rest,
@@ -37,8 +45,8 @@ export class PostService {
   async findAll(page: number = 1, limit: number = 10): Promise<Post[]> {
     const [posts, total] = await this.postRepository.findAndCount({
       relations: ['user', 'discipline'],
-      skip: (page - 1) * limit, // Pular posts já recuperados
-      take: limit, // Limitar a quantidade de posts retornados
+      skip: (page - 1) * limit,
+      take: limit,
     });
 
     return posts;
