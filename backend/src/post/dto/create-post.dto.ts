@@ -14,8 +14,8 @@ export class CreatePostDto {
   createdAt: Date;
 
   @IsNotEmpty()
-  userId: number; // ou o tipo que representa seu usuário
+  user: Usuario; // ou o tipo que representa seu usuário
 
   @IsNotEmpty()
-  disciplineId: number;
+  disciplinaID: number;
 }

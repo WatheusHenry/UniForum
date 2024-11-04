@@ -37,6 +37,7 @@ export async function register(createUser: { name: any; email: any; password: an
     console.log(response.data)
     if (response) {
       localStorage.setItem('authToken', response.data.user.access_token);
+      localStorage.setItem('idUser', response.data.user.userId);
     }
 
     return response.data;

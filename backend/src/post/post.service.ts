@@ -21,13 +21,12 @@ export class PostService {
   ) {}
 
   async create(createPostDto: CreatePostDto) {
-    const { userId, disciplineId, ...rest } = createPostDto;
-
+    const { ...rest } = createPostDto;
     const user = await this.usuarioRepository.findOne({
-      where: { id: userId },
+      where: { id: createPostDto.user.id },
     });
     const discipline = await this.disciplinaRepository.findOne({
-      where: { id: disciplineId },
+      where: { id: createPostDto.disciplinaID },
     });
 
     const post = this.postRepository.create({

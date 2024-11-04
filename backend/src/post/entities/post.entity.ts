@@ -19,7 +19,7 @@ export class Post {
   @Column({ name: 'title', type: 'varchar', length: 255 })
   title: string;
 
-  @Column({ name: 'content', type: 'varchar', length: 255 })
+  @Column({ name: 'content', type: 'longtext' })
   content: string;
 
   @CreateDateColumn({ name: 'created_at' })

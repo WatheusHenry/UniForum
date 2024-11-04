@@ -56,6 +56,7 @@ const handleAddPost = async (newPost) => {
   try {
     const createdPost = await addPost(newPost);
     posts.value.unshift(createdPost);
+    console.log(newPost.value)
     closeModal();
   } catch (error) {
     console.error('Erro ao adicionar a publicação:', error);
