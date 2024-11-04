@@ -53,16 +53,16 @@ onMounted(() => {
 <style scoped>
 .container {
   display: flex;
-  background-color: #2D2D30;
+  background-color: #141416;
   height: 100vh;
   overflow: auto;
 }
 
 .container-main {
   display: flex;
-  width: 60%;
+  width: 40%;
   flex-direction: column;
-  /* flex: 1; */
+  border-right: 1px solid #303030;
   overflow-y: auto;
 }
 

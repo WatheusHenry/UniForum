@@ -14,20 +14,26 @@
       <ul>
         <li>
           <a href="/home">
-            <img src="../assets/images/home.svg" />
+            <i class="pi pi-home"></i>
             Página Inicial
           </a>
         </li>
         <li>
           <a href="/materias">
-            <img src="../assets/images/msg.svg" />
+            <i class="pi pi-book"></i>
             Matérias
           </a>
         </li>
         <li>
           <a href="#">
-            <img src="../assets/images/settings.svg" />
+            <i class="pi pi-cog"></i>
             Configurações
+          </a>
+        </li>
+        <li>
+          <a @click="logout" class="logout">
+            <i class="pi pi-sign-out"></i>
+            Logout
           </a>
         </li>
       </ul>
@@ -45,11 +51,13 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import { fetchUserData } from '@/services/userService';
 import { fetchDisciplinesByCourse } from '@/services/disciplineService';
 
 const disciplinas = ref([]);
 const user = ref({});
+const router = useRouter();
 
 const loadUserData = async () => {
   const userid = localStorage.getItem('idUser');
@@ -60,6 +68,13 @@ const loadUserData = async () => {
 const loadDisciplines = async () => {
   const userCourseId = user.value.curso.id;
   disciplinas.value = await fetchDisciplinesByCourse(userCourseId);
+};
+
+const logout = () => {
+  localStorage.removeItem('authToken');
+  localStorage.removeItem('idUser');
+  localStorage.removeItem('idCourse');
+  router.push('/login');
 };
 
 onMounted(() => {
@@ -75,13 +90,17 @@ onMounted(() => {
 
 <style scoped>
 .sidebar {
-  background-color: #252526;
+  background-color: #141416;
   width: 40vh;
   height: 100vh;
+  border-right: 1px solid #484849;
+  margin-left: 15rem;
 }
 
 .logoContainer {
   padding: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .unimarLogo {
@@ -90,7 +109,7 @@ onMounted(() => {
 
 .profile {
   display: flex;
-  margin-inline: 1.5rem;
+  margin-inline: 1rem;
   width: 17rem;
   padding: 0.5rem;
   border-radius: 1rem;
@@ -178,7 +197,6 @@ onMounted(() => {
 .fixed-subjects {
   margin-top: 20px;
   padding: 15px;
-  background-color: #252526;
   border-radius: 8px;
   color: #ffffff;
 }
@@ -208,5 +226,25 @@ onMounted(() => {
   background-color: #3b3b3b;
   color: #ffffff;
   cursor: pointer;
+}
+
+.logout {
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.logout:hover {
+  background-color: #555;
+}
+
+.logout img {
+  width: 24px;
+  height: 24px;
 }
 </style>

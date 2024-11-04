@@ -11,16 +11,17 @@ import { CursoModule } from 'src/curso/curso.module';
 
 @Module({
   imports: [
-    UsuarioModule,CursoModule,
-    TypeOrmModule.forFeature([Usuario]), // Certifique-se de que o repositório está registrado
+    UsuarioModule,
+    CursoModule,
+    TypeOrmModule.forFeature([Usuario]),
     ConfigModule.forRoot(),
     JwtModule.register({
       global: true,
       privateKey: process.env.JWT_SECRET_KEY,
-      signOptions: { expiresIn: '1h' }
-    })
+      signOptions: { expiresIn: '1d' },
+    }),
   ],
   controllers: [AuthController],
-  providers: [AuthService,UsuarioService],
+  providers: [AuthService, UsuarioService],
 })
 export class AuthModule {}

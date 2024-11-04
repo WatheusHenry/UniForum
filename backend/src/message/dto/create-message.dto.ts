@@ -1,18 +1,20 @@
-import { Usuario } from "src/usuario/entities/usuario.entity";
-import { Message } from "../entities/message.entity";
-import { Post } from "src/post/entities/post.entity";
-import { ApiProperty } from "@nestjs/swagger";
+// create-message.dto.ts
+import { IsNotEmpty, IsOptional, IsNumber, IsString } from 'class-validator';
 
 export class CreateMessageDto {
-    @ApiProperty({ required: true, maxLength: 255 })
-    content: string;
+  @IsNotEmpty()
+  @IsString()
+  content: string;
 
-    @ApiProperty({ required: true })
-    post: Post;
+  @IsNotEmpty()
+  @IsNumber()
+  postId: number;
 
-    @ApiProperty({ required: true })
-    user: Usuario;
+  @IsNotEmpty()
+  @IsNumber()
+  userId: number;
 
-    @ApiProperty({ required: false })
-    parentMessage: Message;
+  @IsOptional()
+  @IsNumber()
+  parentMessageId?: number;
 }

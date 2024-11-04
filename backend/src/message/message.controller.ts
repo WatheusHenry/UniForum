@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
@@ -17,6 +26,11 @@ export class MessageController {
     return await this.messageService.create(createMessageDto);
   }
 
+  @Get('/post/:postId')
+  async findMessagesByPost(@Param('postId') postId: number) {
+    return await this.messageService.findByPost(postId);
+  }
+
   @Get()
   async findAll() {
     return await this.messageService.findAll();
@@ -28,7 +42,10 @@ export class MessageController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateMessageDto: UpdateMessageDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateMessageDto: UpdateMessageDto,
+  ) {
     return await this.messageService.update(+id, updateMessageDto);
   }
 

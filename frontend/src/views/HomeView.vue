@@ -6,7 +6,7 @@
       <SearchBar @update-search="pesquisa = $event" />
       <main class="main-content">
         <header class="header">
-          <h1>Feed</h1>
+          <h1>Perguntas</h1>
           <button class="ask-button" @click="openModal">Perguntar +</button>
         </header>
         <Post v-for="(post, index) in posts" :key="index" :title="post.title" :content="post.content"
@@ -77,10 +77,7 @@ const loadPosts = async () => {
     if (fetchedPosts.length === 0) {
       return;
     }
-
     posts.value = [...posts.value, ...fetchedPosts];
-    console.log(posts.value)
-
   } catch (error) {
     console.error("Erro ao buscar posts:", error);
   }
@@ -91,7 +88,6 @@ const onScroll = async (event) => {
   const target = event.target;
   const { scrollTop, clientHeight, scrollHeight } = target;
 
-  console.log(`scrollTop: ${scrollTop}, clientHeight: ${clientHeight}, scrollHeight: ${scrollHeight}`);
 
   if (scrollTop + clientHeight >= scrollHeight - 10 && !isLoading.value) {
     isLoading.value = true;
@@ -123,13 +119,16 @@ onMounted(() => {
   height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
-  width: 60%;
+  width: 40%;
+  border-right: 1px solid rgb(41, 41, 41);
+  margin-right: 3rem;
 }
 
 .container {
+  
   height: 100vh;
   display: flex;
-  background-color: #2D2D30;
+  background-color: #141416;
 }
 
 /* Estilos para a barra de rolagem */
@@ -138,7 +137,7 @@ onMounted(() => {
 }
 
 .container-main::-webkit-scrollbar-track {
-  background: #2d2d2d;
+  background: none;
   border-radius: 10px;
 }
 
@@ -153,14 +152,14 @@ onMounted(() => {
 }
 
 .main-content {
-  width: 90%;
   margin: auto;
   min-height: 150vh;
-  /* Exemplo de altura mínima para permitir rolagem */
 
 }
 
 .header {
+  border-bottom: 1px solid #303030;
+  padding: 1rem 2rem;
   color: white;
   display: flex;
   justify-content: space-between;
@@ -168,23 +167,24 @@ onMounted(() => {
 }
 
 .ask-button {
-  background-color: #28a745;
+  background-color: #2883a7;
   color: white;
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
+  padding: 0.5rem 1.5rem;
+  border-radius: 1rem;
   font-size: 1rem;
+  font-weight: 600;
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .ask-button:hover {
-  background-color: #218838;
+  background-color: #246179;
   transform: scale(1.05);
 }
 
 .ask-button:active {
-  background-color: #1e7e34;
+  background-color: #246179;
   transform: scale(0.98);
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex;">
+  <div style="display: flex;  background: #2D2D30;">
     <div class="image"></div>
 
     <section class="inputContainer">
@@ -106,12 +106,15 @@ const handleRegister = async () => {
 .image {
   width: 70vw;
   height: 100vh;
+  background: #2D2D30;
+
 }
 
 .inputContainer {
   width: 30vw;
   background: #252526;
   margin: auto;
+  height: 100vh;
 }
 
 .logoUnimar {
@@ -120,6 +123,7 @@ const handleRegister = async () => {
 }
 
 .inputs {
+  padding-top: 5rem;
   gap: 2.5rem;
   height: 90vh;
   display: flex;
@@ -170,10 +174,16 @@ h1 {
 .dropdown-curso {
   width: 14.3rem;
   background-color: #2d2d30;
+  color: white !important;
 }
 
 .dropdown-termo {
   width: 14.3rem;
   background-color: #2d2d30;
+  color: white;
+}
+
+.p-dropdown{
+  color: white !important;
 }
 </style>

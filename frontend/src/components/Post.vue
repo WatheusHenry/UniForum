@@ -6,15 +6,12 @@
       <div class="post-info">
         <p class="post-author">{{ userName }}</p>
         <p class="post-discipline">{{ disciplineName }}</p>
-        <p class="post-date">{{ formattedDate }}</p>
       </div>
     </div>
     <h2 class="post-title">{{ title }}</h2>
     <p class="post-content">{{ content }}</p>
+    <p class="post-date">{{ formattedDate }}</p>
     <div class="post-actions">
-      <button class="action-button">
-        <i class="fas fa-thumbs-up"></i> Curtir
-      </button>
       <button class="action-button">
         <i class="fas fa-comment"></i> Comentar
       </button>
@@ -34,7 +31,7 @@ const router = useRouter();
 
 
 const props = defineProps({
-  id: Number, // Adicione o id aqui
+  id: Number, 
   title: String,
   content: String,
   createdAt: String,
@@ -64,18 +61,16 @@ const goToDetail = () => {
 
 <style scoped>
 .post {
-  background-color: #1e1e1e;
-  padding: 1.5rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  border-radius: 10px;
+  cursor: pointer;
+  padding: 1rem 3rem;
+  border-bottom: 1px solid #525151;
+  transition:  0.1s linear;
   color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease;
 }
 
 .post:hover {
-  transform: translateY(-5px);
+  background-color: #333333;
+
 }
 
 .post-header {
@@ -85,8 +80,7 @@ const goToDetail = () => {
 }
 
 .profile-pic {
-  width: 50px;
-  height: 50px;
+  width: 4rem;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #3a3a3a;
@@ -99,12 +93,15 @@ const goToDetail = () => {
 
 .post-author {
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 
 .post-discipline {
+  background-color: #2883a7;
+  padding: 0rem 0.5rem;
+  border-radius: 1rem;
   font-size: 0.9rem;
-  color: #b5b5b5;
+  color: #eeeeee;
 }
 
 .post-date {
@@ -123,18 +120,12 @@ const goToDetail = () => {
   font-size: 0.95rem;
   line-height: 1.5;
   overflow-wrap: break-word;
-  /* Garante que palavras longas quebrem */
   word-wrap: break-word;
-  /* Compatibilidade com navegadores mais antigos */
   overflow: hidden;
-  /* Oculta texto que não cabe */
   max-height: 100px;
-  /* Define uma altura máxima */
   display: -webkit-box;
-  /* Para limitar o número de linhas */
   -webkit-box-orient: vertical;
   line-clamp: 5;
-  /* Número máximo de linhas a serem exibidas */
 }
 
 .post-actions {
@@ -151,7 +142,6 @@ const goToDetail = () => {
   border: none;
   color: #b3b3b3;
   cursor: pointer;
-  padding: 0.5rem 1rem;
   border-radius: 5px;
   transition: background 0.3s, color 0.3s;
 }

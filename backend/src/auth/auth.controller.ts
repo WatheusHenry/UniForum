@@ -17,7 +17,6 @@ export class AuthController {
       signInDto.password,
     );
 
-    // Retorna o token no corpo da resposta, ao invés de setar no cabeçalho
     return res.status(200).json({ token });
   }
 

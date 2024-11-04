@@ -11,21 +11,21 @@
         <textarea v-model="post.content" placeholder="Conteúdo" class="input-field textarea" required></textarea>
 
         <select v-model="post.discipline" class="input-field">
-          <option disabled value="">Selecione uma disciplina</option>
-          <option placeholder="Selecione a disciplina" v-for="discipline in disciplines" :key="discipline.id" :value="discipline.id">
+          <option disabled value="Selecione uma disciplina">Selecione uma disciplina</option>
+          <option v-for="discipline in disciplines" :key="discipline.id" :value="discipline.id">
             {{ discipline.name }}
           </option>
         </select>
-
+        <!-- 
         <input type="file" @change="onImageSelect" accept="image/*" class="input-field file-input" />
         <div v-if="post.profilePic" class="image-preview">
           <img :src="post.profilePic" alt="Imagem selecionada" />
-        </div>
+        </div> -->
       </div>
 
       <footer class="modal-footer">
-        <button class="submit-button" @click="submitPost">Publicar</button>
         <button class="cancel-button" @click="closeModal">Cancelar</button>
+        <button class="submit-button" @click="submitPost">Publicar</button>
       </footer>
     </div>
   </div>
@@ -103,7 +103,7 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.74);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -111,7 +111,7 @@ onMounted(() => {
 }
 
 .modal-content {
-  background-color: #2d2d30;
+  background-color: #171718;
   padding: 1.5rem;
   border-radius: 8px;
   width: 90%;
@@ -140,9 +140,18 @@ onMounted(() => {
   padding: 0.8rem;
   margin-top: 1rem;
   border-radius: 5px;
-  background-color: #33343a;
+  font-size: 1.2rem;
+  background-color: #121213;
   border: 1px solid #555;
   color: #ffffff;
+
+}
+option {
+  color: white;
+}
+
+.input-field:focus {
+  outline: none;
 }
 
 .file-input {
@@ -168,15 +177,17 @@ onMounted(() => {
 .modal-footer {
   display: flex;
   justify-content: space-between;
-  margin-top: 1rem;
+  margin-top: 3rem;
 }
 
 .submit-button {
   background-color: #007bff;
   color: white;
   border: none;
+  font-weight: 600;
+  font-size: 1rem;
   padding: 0.5rem 1rem;
-  border-radius: 5px;
+  border-radius: 1rem;
   cursor: pointer;
 }
 
@@ -184,8 +195,10 @@ onMounted(() => {
   background-color: #444;
   color: white;
   border: none;
+  font-size: 1rem;
+  font-weight: 600;
   padding: 0.5rem 1rem;
-  border-radius: 5px;
+  border-radius: 1rem;
   cursor: pointer;
 }
 </style>

@@ -2,7 +2,7 @@
     <div class="alunos-matriculados">
         <h2>Alunos matriculados</h2>
         <ul>
-            <li v-for="(aluno, index) in alunos.slice(0, 6)" :key="index" :class="{ ativo: index === 0 }">
+            <li v-for="(aluno, index) in alunos.slice(0, 4)" :key="index" :class="{ ativo: index === 0 }">
                 <div class="avatar"></div>
                 <div class="aluno-info">
                     <span>{{ aluno.name }}</span>
@@ -13,9 +13,12 @@
         <div class="dicas">
             <div class="dicas-header">
                 <img src="../assets/images/dicas.svg" alt="Ícone de dicas" />
-                <h3 style="margin-top: 1rem;">Dicas</h3>
+                <h3 style="margin-top: 0.2rem;">Dica do dia</h3>
             </div>
-            <p>Dica ai né viado</p>
+            <p>Manter-se organizado é fundamental para o sucesso nos estudos! Tente criar um cronograma semanal, onde
+                você pode definir horários específicos para suas aulas, revisões e descanso. Dessa forma, você consegue
+                equilibrar seus estudos e ainda ter tempo para relaxar. Lembre-se: a constância é a chave para o
+                aprendizado eficaz!"</p>
         </div>
     </div>
 </template>
@@ -59,12 +62,12 @@ const fetchAlunos = async () => {
 <style scoped>
 .alunos-matriculados {
     width: 23rem;
-    background-color: #252526;
+    background-color: #141416;
     padding: 1.5rem;
     height: fit-content;
     border-radius: 1rem;
     margin-top: 3rem;
-    
+
 }
 
 .alunos-matriculados h2 {

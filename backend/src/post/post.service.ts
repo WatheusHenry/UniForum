@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // post.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -43,10 +44,16 @@ export class PostService {
   }
 
   async findAll(page: number = 1, limit: number = 10): Promise<Post[]> {
+    page = page < 1 ? 1 : page;
+    limit = limit < 1 ? 10 : limit;
+
     const [posts, total] = await this.postRepository.findAndCount({
       relations: ['user', 'discipline'],
       skip: (page - 1) * limit,
       take: limit,
+      order: {
+        createdAt: 'DESC',
+      },
     });
 
     return posts;
