@@ -5,7 +5,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
 import { Disciplina } from 'src/disciplina/entities/disciplina.entity';
 
@@ -26,8 +26,9 @@ export class PostService {
       where: { id: createPostDto.user.id },
     });
     const discipline = await this.disciplinaRepository.findOne({
-      where: { id: createPostDto.disciplinaID },
+      where: { id: createPostDto.disciplineID },
     });
+
 
     const post = this.postRepository.create({
       ...rest,
@@ -69,6 +70,28 @@ export class PostService {
     }
 
     return post;
+  }
+
+  async findByCursoId(
+    cursoId: number,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<Post[]> {
+    const disciplinas = await this.disciplinaRepository.find({
+      where: { curso: { id: cursoId } },
+    });
+
+    const disciplinaIds = disciplinas.map((disciplina) => disciplina.id);
+
+    const [posts, total] = await this.postRepository.findAndCount({
+      where: { discipline: { id: In(disciplinaIds) } },
+      relations: ['user', 'discipline'],
+      skip: (page - 1) * limit,
+      take: limit,
+      order: { createdAt: 'DESC' },
+    });
+
+    return posts;
   }
 
   async update(id: number, updatePostDto: Partial<UpdatePostDto>) {

@@ -1,25 +1,4 @@
 <!-- eslint-disable vue/no-deprecated-v-on-native-modifier -->
-<template>
-  <div class="container">
-    <SideBar />
-    <div class="container-main" @scroll.native="onScroll">
-      <SearchBar @update-search="pesquisa = $event" />
-      <main class="main-content">
-        <header class="header">
-          <h1>Perguntas</h1>
-          <button class="ask-button" @click="openModal">Perguntar +</button>
-        </header>
-        <Post v-for="(post, index) in posts" :key="index" :title="post.title" :content="post.content"
-          :createdAt="post.createdAt" :user="post.user" :discipline="post.discipline" :id="post.id" />
-
-        <div v-if="isLoading" class="loading-indicator">Carregando...</div>
-      </main>
-    </div>
-    <ListagemAlunos />
-    <NewPostModal v-if="isModalOpen" @post-submitted="handleAddPost" @close="closeModal" />
-  </div>
-</template>
-
 <script setup>
 import { ref, onMounted } from 'vue';
 import { fetchPosts, addPost } from '@/services/postService';
@@ -37,6 +16,7 @@ const isModalOpen = ref(false);
 const limit = ref(10);
 const page = ref(1);
 const isLoading = ref(false);
+const noMorePosts = ref(false);
 
 const openModal = () => {
   isModalOpen.value = true;
@@ -50,13 +30,12 @@ const handleAddPost = async (newPost) => {
   const userid = localStorage.getItem('idUser');
   const courseId = localStorage.getItem('idCourse');
 
-  newPost.user = { id: userid };
-  newPost.course = { id: courseId };
+  Object.assign(newPost, { user: { id: userid }, course: { id: courseId } });
+  console.log(newPost);
 
   try {
     const createdPost = await addPost(newPost);
     posts.value.unshift(createdPost);
-    console.log(newPost.value)
     closeModal();
   } catch (error) {
     console.error('Erro ao adicionar a publicação:', error);
@@ -72,12 +51,34 @@ const loadUserData = async () => {
   }
 };
 
+const waitForLocalStorage = (key) => {
+  return new Promise((resolve) => {
+    const checkKey = () => {
+      const value = localStorage.getItem(key);
+      if (value) {
+        resolve(value);
+      } else {
+        setTimeout(checkKey, 100);
+      }
+    };
+    checkKey();
+  });
+};
+
 const loadPosts = async () => {
+  if (noMorePosts.value) return; 
+  
   try {
-    const fetchedPosts = await fetchPosts(page.value, limit.value);
+    const courseId = await waitForLocalStorage('idCourse');
+    const authToken = await waitForLocalStorage('authToken');
+
+    const fetchedPosts = await fetchPosts(page.value, limit.value, courseId, authToken);
+
     if (fetchedPosts.length === 0) {
+      noMorePosts.value = true;
       return;
     }
+
     posts.value = [...posts.value, ...fetchedPosts];
   } catch (error) {
     console.error("Erro ao buscar posts:", error);
@@ -85,12 +86,10 @@ const loadPosts = async () => {
 };
 
 const onScroll = async (event) => {
-
   const target = event.target;
   const { scrollTop, clientHeight, scrollHeight } = target;
 
-
-  if (scrollTop + clientHeight >= scrollHeight - 10 && !isLoading.value) {
+  if (scrollTop + clientHeight >= scrollHeight - 1 && !isLoading.value && !noMorePosts.value) {
     isLoading.value = true;
     page.value++;
 
@@ -104,17 +103,49 @@ const onScroll = async (event) => {
   }
 };
 
-
-
 onMounted(() => {
   loadUserData();
   loadPosts();
 });
 </script>
 
+<template>
+  <div class="container">
+    <SideBar />
+    <div class="container-main" @scroll.native="onScroll">
+      <SearchBar @update-search="pesquisa = $event" />
+      <main class="main-content">
+        <header class="header">
+          <h1>Perguntas</h1>
+          <button class="ask-button" @click="openModal">Perguntar +</button>
+        </header>
 
+        <!-- Verifica se há posts -->
+        <div v-if="!isLoading && posts.length === 0" class="no-posts-message">
+          Nenhuma publicação disponível
+        </div>
+
+        <!-- Exibe os posts quando houver -->
+        <Post v-for="(post, index) in posts" :key="index" :title="post.title" :content="post.content"
+          :createdAt="post.createdAt" :user="post.user" :discipline="post.discipline" :id="post.id" />
+
+        <div v-if="isLoading" class="loading-indicator">Carregando...</div>
+      </main>
+    </div>
+    <ListagemAlunos />
+    <NewPostModal v-if="isModalOpen" @post-submitted="handleAddPost" @close="closeModal" />
+  </div>
+</template>
 
 <style scoped>
+
+.no-posts-message {
+  text-align: center;
+  color: white;
+  padding: 1rem;
+  font-size: 1.2rem;
+}
+
 .container-main {
   padding-top: 1rem;
   height: 100vh;
@@ -126,7 +157,6 @@ onMounted(() => {
 }
 
 .container {
-  
   height: 100vh;
   display: flex;
   background-color: #141416;
@@ -155,7 +185,6 @@ onMounted(() => {
 .main-content {
   margin: auto;
   min-height: 150vh;
-
 }
 
 .header {
@@ -189,7 +218,7 @@ onMounted(() => {
   transform: scale(0.98);
 }
 
-.loading-indicator {
+.loading-indicator, .no-more-posts {
   text-align: center;
   color: white;
   padding: 1rem;

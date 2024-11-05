@@ -33,12 +33,14 @@ const disciplinas = ref([]);
 
 const fetchDisciplines = async () => {
   const token = localStorage.getItem('authToken');
+  const courseId = localStorage.getItem('idCourse')
   try {
-    const response = await axios.get(`http://localhost:3000/disciplina/curso/1`, {
+    const response = await axios.get(`http://localhost:3000/disciplina/curso/${courseId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log(disciplinas.value)
     disciplinas.value = response.data;
   } catch (error) {
     console.error('Erro ao buscar disciplinas:', error);

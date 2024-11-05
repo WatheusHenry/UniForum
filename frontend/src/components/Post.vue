@@ -102,6 +102,7 @@ const goToDetail = () => {
   border-radius: 1rem;
   font-size: 0.9rem;
   color: #eeeeee;
+  width: fit-content;
 }
 
 .post-date {

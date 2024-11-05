@@ -10,7 +10,7 @@
         <input type="text" v-model="post.title" placeholder="Título" class="input-field" required />
         <textarea v-model="post.content" placeholder="Conteúdo" class="input-field textarea" required></textarea>
 
-        <select v-model="post.discipline" class="input-field">
+        <select v-model="post.disciplineID" class="input-field">
           <option disabled value="Selecione uma disciplina">Selecione uma disciplina</option>
           <option v-for="discipline in disciplines" :key="discipline.id" :value="discipline.id">
             {{ discipline.name }}
@@ -45,7 +45,7 @@ const post = ref({
   content: '',
   createdAt: new Date().toISOString(),
   user: null,
-  discipline: null,
+  disciplineID: null,
   profilePic: null,
 });
 
@@ -62,7 +62,7 @@ const resetForm = () => {
   post.value.content = '';
   post.value.createdAt = new Date().toISOString();
   post.value.user = null;
-  post.value.discipline = null;
+  post.value.disciplineID = null;
   post.value.profilePic = null;
 };
 
@@ -82,13 +82,11 @@ const onImageSelect = (event) => {
 };
 
 const submitPost = () => {
-  if (!post.value.title || !post.value.content || !post.value.discipline) {
+  if (!post.value.title || !post.value.content || !post.value.disciplineID) {
     alert('Por favor, preencha todos os campos.');
     return;
   }
-
   emit('post-submitted', { ...post.value });
-  closeModal();
 };
 
 onMounted(() => {

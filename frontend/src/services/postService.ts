@@ -1,34 +1,38 @@
 import axios from 'axios'
 
 interface Post {
-  id: number;
-  title: string;
-  content: string;
-  createdAt: string; 
+  id: number
+  title: string
+  content: string
+  createdAt: string
 }
 
 const API_URL = 'http://localhost:3000'
 
 const token = () => localStorage.getItem('authToken')
 
-export const fetchPosts = async (page: any, limit: any) => {
+export const fetchPosts = async (page: number, limit: number, courseId: any, authToken: any) => {
   try {
-    const response = await axios.get(`${API_URL}/post?page=${page}&limit=${limit}`, {
-      headers: {
-        Authorization: `Bearer ${token()}`
+    const response = await axios.get(
+      `${API_URL}/post/curso/${courseId}?page=${page}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
       }
-    });
+    );
 
-    const posts: Post[] = response.data;
-
-    const sortedPosts = posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    
-    return sortedPosts;
+    const posts = response.data;
+    return posts.sort(
+      (a: { createdAt: string | number | Date }, b: { createdAt: string | number | Date }) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
   } catch (error) {
-    console.error('Erro ao buscar posts:', error);
+    console.error("Erro ao buscar posts:", error);
     throw error;
   }
-}
+};
+
+
 export const fetchPostById = async (id: number) => {
   try {
     const response = await axios.get(`${API_URL}/post/${id}`, {

@@ -11,7 +11,7 @@ export class CursoService {
   constructor(
     @InjectRepository(Curso)
     private readonly cursoRepository: Repository<Curso>,
-  ) { }
+  ) {}
 
   async create(createCursoDto: CreateCursoDto): Promise<Curso> {
     const curso = this.cursoRepository.create(createCursoDto);
@@ -19,11 +19,16 @@ export class CursoService {
   }
 
   async findAll(): Promise<Curso[]> {
-    return await this.cursoRepository.find({ relations: ['disciplinas', 'usuarios'] });
+    return await this.cursoRepository.find({
+      relations: ['disciplines', 'users'],
+    });
   }
 
   async findOne(id: number): Promise<Curso> {
-    const curso = await this.cursoRepository.findOne({ where: { id }, relations: ['disciplinas', 'usuarios'] });
+    const curso = await this.cursoRepository.findOne({
+      where: { id },
+      relations: ['disciplines', 'users'],
+    });
     if (!curso) {
       throw new NotFoundException(`Curso com ID ${id} não encontrado`);
     }
@@ -40,18 +45,20 @@ export class CursoService {
     const curso = await this.findOne(id);
     await this.cursoRepository.remove(curso);
   }
-  
-  async getAlunosByCursoId(cursoId: number): Promise<{ curso: Curso; alunos: Usuario[] }> {
+
+  async getAlunosByCursoId(
+    cursoId: number,
+  ): Promise<{ curso: Curso; alunos: Usuario[] }> {
     const curso = await this.cursoRepository.findOne({
       where: { id: cursoId },
       relations: ['users'], // Carregar a relação com usuários
     });
-  
+
     if (!curso) {
       throw new NotFoundException(`Curso com ID ${cursoId} não encontrado`);
     }
-  
+
     // Retorna um objeto contendo o curso e a lista de alunos
-    return { curso, alunos: curso.users }; 
+    return { curso, alunos: curso.users };
   }
 }

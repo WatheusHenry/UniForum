@@ -35,6 +35,15 @@ export class PostController {
     return await this.postService.findAll(page, limit);
   }
 
+  @Get('curso/:cursoId')
+  async findByCursoId(
+    @Param('cursoId') cursoId: number,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ) {
+    return await this.postService.findByCursoId(cursoId, page, limit);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.postService.findOne(+id);

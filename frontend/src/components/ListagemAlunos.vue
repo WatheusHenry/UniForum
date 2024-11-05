@@ -28,20 +28,27 @@
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
-
 const alunos = ref([]);
 const curso = ref({});
 
-onMounted(() => {
-    fetchAlunos();
-})
-
+const waitForLocalStorage = (key, interval = 100) => {
+    return new Promise((resolve) => {
+        const checkKey = setInterval(() => {
+            if (localStorage.getItem(key)) {
+                clearInterval(checkKey);
+                resolve(localStorage.getItem(key));
+            }
+        }, interval);
+    });
+};
 
 const fetchAlunos = async () => {
     try {
-        const token = localStorage.getItem('authToken');
+        // Aguarda até que o authToken e o idCourse estejam disponíveis no localStorage
+        const token = await waitForLocalStorage('authToken');
+        const cursoId = await waitForLocalStorage('idCourse');
 
-        const response = await axios.get('http://localhost:3000/curso/1/alunos', {
+        const response = await axios.get(`http://localhost:3000/curso/${cursoId}/alunos`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -54,9 +61,11 @@ const fetchAlunos = async () => {
     }
 };
 
-
-
+onMounted(() => {
+    fetchAlunos();
+});
 </script>
+
 
 
 <style scoped>

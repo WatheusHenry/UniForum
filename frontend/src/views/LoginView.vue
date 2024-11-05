@@ -1,13 +1,13 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <div style="display: flex; background-color: #2D2D30;">
+  <div class="container">
     <div class="image"></div>
 
     <section class="inputContainer">
       <div class="inputs">
-        <img class="logoUnimar" src="../assets/images/logoUnimar.svg" alt="">
-        <h1>Fórum de perguntas e respostas</h1>
-        <div class="" style="display: flex; flex-direction: column; width: 50%; margin-inline: auto; gap: 2rem;">
+        <img class="logoUnimar" src="../assets/images/logoUnimar.svg" alt="Logo Unimar" />
+        <h1>Fórum de Perguntas e Respostas</h1>
+        <div class="form-group">
           <FloatLabel>
             <InputText id="username" v-model="email" />
             <label for="username">E-mail</label>
@@ -17,8 +17,8 @@
             <label for="password">Senha</label>
           </FloatLabel>
         </div>
-        <Button @click="handleLogin" style="width: 50%; margin-inline: auto">Entrar</Button>
-        <a href="/register" style="margin-inline: auto; color: white;">Cadastre-se</a>
+        <Button @click="handleLogin" class="login-button">Entrar</Button>
+        <a href="/register" class="register-link">Cadastre-se</a>
       </div>
     </section>
   </div>
@@ -26,18 +26,18 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router'; // Importar useRouter
-import { login } from '../services/authService'; // Importar o serviço de login
+import { useRouter } from 'vue-router';
+import { login } from '../services/authService';
 
 const email = ref('');
 const senha = ref('');
-const router = useRouter(); 
+const router = useRouter();
 
 const handleLogin = async () => {
   try {
     const token = await login(email.value, senha.value);
     if (token) {
-      router.push('/home'); 
+      router.push('/home');
     }
   } catch (error) {
     alert('Erro ao fazer login. Verifique suas credenciais.');
@@ -46,63 +46,92 @@ const handleLogin = async () => {
 </script>
 
 <style scoped>
-.image {
-  width: 70vw;
+.container {
+  display: flex;
   height: 100vh;
-  background: #2D2D30;
+  background-color: #1E1E1E;
+  color: white;
+}
+
+.image {
+  flex: 2;
+  background: url('../assets/images/background.jpg') 
 }
 
 .inputContainer {
-  width: 30vw;
-  height: 100vh;
-  background: #252526;
-  margin: auto;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background-color: #252526;
+  padding: 2rem;
+  color: white;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
 }
 
 .logoUnimar {
   width: 5rem;
-  margin-inline: auto;
-}
-
-.inputs {
-  gap: 2.5rem;
-  height: 90vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin: auto;
 }
 
 h1 {
-  width: 13rem;
-  text-align: center;
-  margin-inline: auto;
   color: white;
-  font-size: large;
-  line-break: auto;
+  font-size: 1.5rem;
+  text-align: center;
 }
 
-.p-inputtext {
-  width: 100%;
-  border-radius: 0rem !important;
-  border: none !important;
-  border-bottom: white 1px solid !important;
-  background-color: #2D2D30 !important;
-  color: white !important;
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.p-password {
-  input {
-    width: 100%;
-  }
-  width: 100%;
+.p-inputtext,
+.p-password input {
+
+  border: none;
+  border-bottom: 2px solid #555;
+  background-color: #2D2D30;
+  color: white;
+  transition: border-color 0.3s;
 }
 
-.p-button {
-  width: 7rem !important;
-  border-radius: 0rem !important;
-  background-color: white !important;
-  color: #252526 !important;
-  border: none !important;
+
+.p-inputtext:focus,
+.p-password input:focus {
+  border-bottom-color: #1DB954;
+  outline: none;
+}
+
+
+.login-button {
+  width: 10rem;
+  background-color: #1DB954;
+  border: none;
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #17a442;
+}
+
+.register-link {
+  color: #1DB954;
+  text-decoration: none;
+  margin-top: 1rem;
+}
+
+.register-link:hover {
+  text-decoration: underline;
 }
 </style>
