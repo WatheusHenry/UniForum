@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  BadRequestException,
+  UseGuards,
+} from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
@@ -9,7 +19,7 @@ import { AuthGuard } from 'src/auth/guard/auth.guard';
 @ApiTags('User')
 @Controller('user')
 export class UsuarioController {
-  constructor(private readonly usuarioService: UsuarioService) { }
+  constructor(private readonly usuarioService: UsuarioService) {}
 
   @Post()
   create(@Body() createUsuarioDto: CreateUsuarioDto) {
@@ -36,14 +46,16 @@ export class UsuarioController {
   }
 
   @Patch('resetPassword/:id')
-  updatePassword(@Param('id') id: number, @Body() updatePasswordDto: UpdatePasswordDto) {
-    const { password } = updatePasswordDto;  
+  updatePassword(
+    @Param('id') id: number,
+    @Body() updatePasswordDto: UpdatePasswordDto,
+  ) {
+    const { password } = updatePasswordDto;
     if (!password) {
       throw new BadRequestException('A nova senha é obrigatória');
     }
     return this.usuarioService.updatePassword(id, password);
   }
-
 
   @Delete(':id')
   remove(@Param('id') id: string) {

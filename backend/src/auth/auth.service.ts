@@ -34,15 +34,10 @@ export class AuthService {
     return response;
   }
 
-  async register(
-    createUsuarioDto: CreateUsuarioDto,
-    profilePicture: Express.Multer.File,
-  ) {
-    const imagePath = profilePicture ? profilePicture.path : null;
-
+  async register(createUsuarioDto: CreateUsuarioDto, profilePicture: string) {
     const newUser = await this.usuarioService.create({
       ...createUsuarioDto,
-      profilePicture: imagePath,
+      profilePicture: profilePicture,
     });
 
     const payload = { userId: newUser.id };

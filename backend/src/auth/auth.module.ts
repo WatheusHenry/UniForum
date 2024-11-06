@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
 import { UsuarioService } from 'src/usuario/usuario.service';
 import { CursoModule } from 'src/curso/curso.module';
+import { MinioService } from 'src/minio.service';
 
 @Module({
   imports: [
@@ -22,6 +23,6 @@ import { CursoModule } from 'src/curso/curso.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UsuarioService],
+  providers: [AuthService, UsuarioService, MinioService],
 })
 export class AuthModule {}

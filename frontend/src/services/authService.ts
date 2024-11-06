@@ -14,7 +14,6 @@ export async function login(email: string, password: string) {
       console.log(response.data)
       localStorage.setItem('authToken', response.data.token.access_token)
       localStorage.setItem('idUser', response.data.token.userId)
-      
     }
 
     return response.data
@@ -24,18 +23,22 @@ export async function login(email: string, password: string) {
   }
 }
 
-export async function register(createUser: { name: any; email: any; password: any; courseIds: any; currentTerm: any }, profilePicture: string | Blob | null) {
+export async function register(
+  createUser: { name: any; email: any; password: any; courseIds: any; currentTerm: any },
+  profilePicture: string | Blob | null
+) {
   const { name, email, password, courseIds, currentTerm } = createUser
 
   const formData = new FormData()
   formData.append('name', name)
   formData.append('email', email)
   formData.append('password', password)
-  formData.append('courseIds', JSON.stringify(courseIds)) // Enviar como string JSON
+  formData.append('courseIds', JSON.stringify(courseIds))
   formData.append('currentTerm', currentTerm)
 
-  if (profilePicture) {
-    formData.append('profilePicture', profilePicture) // Adiciona a imagem
+  if (profilePicture && profilePicture instanceof File) {
+    formData.append('profilePicture', profilePicture);
+    console.log("arquivo adicionado")
   }
 
   try {

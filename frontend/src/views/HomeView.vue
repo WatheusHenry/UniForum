@@ -183,7 +183,7 @@ onMounted(() => {
 
 .main-content {
   margin: auto;
-  min-height: 150vh;
+  /* min-height: 150vh; */
 }
 
 .header {

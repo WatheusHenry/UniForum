@@ -55,7 +55,7 @@ const handleLogin = async () => {
 
 .image {
   flex: 2;
-  background: url('../assets/images/background.jpg') 
+  background: url('../assets/images/background.jpg')
 }
 
 .inputContainer {
@@ -89,11 +89,12 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  
 }
 
 .p-inputtext,
 .p-password input {
-
+  min-width: 19rem;
   border: none;
   border-bottom: 2px solid #555;
   background-color: #2D2D30;
