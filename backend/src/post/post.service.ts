@@ -29,7 +29,6 @@ export class PostService {
       where: { id: createPostDto.disciplineID },
     });
 
-
     const post = this.postRepository.create({
       ...rest,
       user,

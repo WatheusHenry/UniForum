@@ -3,7 +3,13 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Curso } from 'src/curso/entities/curso.entity';
 import { Message } from 'src/message/entities/message.entity';
 import { Post } from 'src/post/entities/post.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 
 @Entity('users')
 export class Usuario {
@@ -11,15 +17,30 @@ export class Usuario {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty({
+    example: 'https://example.com/profile-picture.jpg',
+    description: 'URL da foto de perfil do usuário',
+    required: false,
+  })
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  profilePicture: string;
+
   @ApiProperty({ example: 'John Doe', description: 'Nome do usuário' })
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @ApiProperty({ example: 'john.doe@example.com', description: 'Email do usuário' })
+  @ApiProperty({
+    example: 'john.doe@example.com',
+    description: 'Email do usuário',
+  })
   @Column({ type: 'varchar', length: 255, unique: true })
   email: string;
 
-  @ApiProperty({ example: 'senha123', description: 'Senha do usuário', writeOnly: true })
+  @ApiProperty({
+    example: 'senha123',
+    description: 'Senha do usuário',
+    writeOnly: true,
+  })
   @Column({ type: 'varchar', length: 255 })
   password: string;
 

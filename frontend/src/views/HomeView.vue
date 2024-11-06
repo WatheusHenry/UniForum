@@ -120,12 +120,11 @@ onMounted(() => {
           <button class="ask-button" @click="openModal">Perguntar +</button>
         </header>
 
-        <!-- Verifica se há posts -->
         <div v-if="!isLoading && posts.length === 0" class="no-posts-message">
           Nenhuma publicação disponível
         </div>
 
-        <!-- Exibe os posts quando houver -->
+
         <Post v-for="(post, index) in posts" :key="index" :title="post.title" :content="post.content"
           :createdAt="post.createdAt" :user="post.user" :discipline="post.discipline" :id="post.id" />
 

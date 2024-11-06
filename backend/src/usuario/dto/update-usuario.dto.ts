@@ -8,19 +8,16 @@ export class UpdateUsuarioDto extends PartialType(CreateUsuarioDto) {
   @IsString()
   @IsOptional()
   @ApiProperty()
-
   name?: string;
 
   @IsEmail()
   @IsOptional()
   @ApiProperty()
-
   email?: string;
 
   @IsString()
   @IsOptional()
   @ApiProperty()
-
   password?: string;
 
   @IsArray()
@@ -32,4 +29,11 @@ export class UpdateUsuarioDto extends PartialType(CreateUsuarioDto) {
   @IsOptional()
   @ApiProperty()
   currentTerm?: string;
+
+  @ApiProperty({
+    example: 'https://example.com/profile-picture.jpg',
+    description: 'URL da foto de perfil do usuário',
+    required: false,
+  })
+  profilePicture?: string;
 }

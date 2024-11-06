@@ -9,6 +9,11 @@
         
         <div class="form-group">
           <FloatLabel>
+            <input type="file" @change="onImageChange" />
+            <label for="profile-picture">Foto de Perfil</label>
+          </FloatLabel>
+
+          <FloatLabel>
             <InputText id="name" v-model="nome" />
             <label for="name">Nome</label>
           </FloatLabel>
@@ -46,7 +51,7 @@
 </template>
 
 <script setup>
-import { ref,onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { fetchCursos } from '../services/courseService';
 import { register } from '../services/authService';
 import { useRouter } from 'vue-router';
@@ -64,12 +69,19 @@ const senhaRepetida = ref('');
 const cursoSelecionado = ref(null);
 const termoSelecionado = ref(null);
 const cursos = ref('');
+const profilePicture = ref(null); // Armazena a imagem do usuário
 
 const termos = ref([
   { nome: '1º Termo', id: 1 },
   { nome: '2º Termo', id: 2 },
   { nome: '3º Termo', id: 3 },
 ]);
+
+// Função para capturar a imagem do usuário
+const onImageChange = (event) => {
+  const file = event.target.files[0];
+  profilePicture.value = file;
+};
 
 const handleRegister = async () => {
   if (senha.value !== senhaRepetida.value) {
@@ -86,7 +98,7 @@ const handleRegister = async () => {
   };
 
   try {
-    const response = await register(newUser);
+    const response = await register(newUser, profilePicture.value);
     if (response) {
       router.push('/home');
     }
@@ -100,9 +112,10 @@ onMounted(async () => {
   try {
     cursos.value = await fetchCursos();
   } catch (error) {
-    console.log(error,'Erro ao carregar cursos');
+    console.log(error, 'Erro ao carregar cursos');
   }
 });
+
 </script>
 
 <style scoped>

@@ -34,11 +34,21 @@ export class AuthService {
     return response;
   }
 
-  async register(createUsuarioDto: CreateUsuarioDto) {
-    const newUser = await this.usuarioService.create(createUsuarioDto);
-    const payload = { newUser };
+  async register(
+    createUsuarioDto: CreateUsuarioDto,
+    profilePicture: Express.Multer.File,
+  ) {
+    const imagePath = profilePicture ? profilePicture.path : null;
+
+    const newUser = await this.usuarioService.create({
+      ...createUsuarioDto,
+      profilePicture: imagePath,
+    });
+
+    const payload = { userId: newUser.id };
     return {
       access_token: await this.jwtService.signAsync(payload),
+      user: newUser,
     };
   }
 }

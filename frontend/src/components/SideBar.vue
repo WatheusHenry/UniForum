@@ -4,7 +4,8 @@
       <img class="unimarLogo" src="../assets/images/logoUnimar.svg" alt="Logo" />
     </div>
     <div class="profile">
-      <img class="profile-picture" src="../assets/images/perfil-de-usuario.png" alt="Profile Picture" />
+      <img class="profile-picture" :src="`
+      ${user.profilePicture}`" alt="Profile Picture" />
       <div class="profile-details">
         <p class="profile-name">{{ user ? user.name : 'Carregando...' }}</p>
         <p class="profile-course">{{ user ? user.curso?.name : 'Carregando...' }}</p>
@@ -62,7 +63,8 @@ const router = useRouter();
 const loadUserData = async () => {
   const userid = localStorage.getItem('idUser');
   user.value = await fetchUserData(userid);
-  localStorage.setItem('idCourse', user.value.curso.id);
+  console.log(user.value)
+  // localStorage.setItem('idCourse', user.value.curso.id);
 };
 
 const loadDisciplines = async () => {

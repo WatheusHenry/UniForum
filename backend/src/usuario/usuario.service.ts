@@ -24,8 +24,7 @@ export class UsuarioService {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(createUsuarioDto.password, salt);
 
-    let curso: Curso | null = null; // Inicialize como null
-
+    let curso: Curso | null = null;
     if (createUsuarioDto.courseIds && createUsuarioDto.courseIds.length > 0) {
       curso = await this.cursoRepository.findOneBy({
         id: createUsuarioDto.courseIds[0],
@@ -83,9 +82,6 @@ export class UsuarioService {
       throw new NotFoundException(`Usuário com ID ${id} não encontrado`);
     }
 
-    const usuarioAtualizado = { ...usuarioExistente };
-
-    // Se a senha for enviada no DTO, ela será criptografada antes de ser atualizada
     if (updateUsuarioDto.password) {
       const salt = await bcrypt.genSalt(10);
       updateUsuarioDto.password = await bcrypt.hash(
@@ -94,13 +90,10 @@ export class UsuarioService {
       );
     }
 
-    Object.keys(updateUsuarioDto).forEach((key) => {
-      if (usuarioExistente[key] !== updateUsuarioDto[key]) {
-        usuarioAtualizado[key] = updateUsuarioDto[key];
-      }
+    return await this.usuarioRepository.save({
+      ...usuarioExistente,
+      ...updateUsuarioDto,
     });
-
-    return await this.usuarioRepository.save(usuarioAtualizado); // Use await
   }
 
   async updatePassword(id: number, newPassword: string) {
