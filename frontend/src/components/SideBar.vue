@@ -63,7 +63,6 @@ const router = useRouter();
 const loadUserData = async () => {
   const userid = localStorage.getItem('idUser');
   user.value = await fetchUserData(userid);
-  console.log(user.value)
   localStorage.setItem('idCourse', user.value.curso.id);
 };
 

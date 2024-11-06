@@ -2,7 +2,7 @@
 <template>
   <div class="post" @click="goToDetail">
     <div class="post-header">
-      <img :src="'https://placehold.co/400'" alt="Profile Picture" class="profile-pic" />
+      <img :src="`${ profilePicture }`" alt="Profile Picture" class="profile-pic" />
       <div class="post-info">
         <p class="post-author">{{ userName }}</p>
         <p class="post-discipline">{{ disciplineName }}</p>
@@ -31,7 +31,7 @@ const router = useRouter();
 
 
 const props = defineProps({
-  id: Number, 
+  id: Number,
   title: String,
   content: String,
   createdAt: String,
@@ -40,6 +40,7 @@ const props = defineProps({
 });
 
 const userName = computed(() => props.user?.name || "Usuário Desconhecido");
+const profilePicture = computed(() => props.user?.profilePicture || "a");
 const disciplineName = computed(() => props.discipline?.name || "Disciplina Desconhecida");
 
 const formattedDate = computed(() => {
@@ -64,7 +65,7 @@ const goToDetail = () => {
   cursor: pointer;
   padding: 1rem 3rem;
   border-bottom: 1px solid #525151;
-  transition:  0.1s linear;
+  transition: 0.1s linear;
   color: white;
 }
 
@@ -81,6 +82,7 @@ const goToDetail = () => {
 
 .profile-pic {
   width: 4rem;
+  height: 4rem;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #3a3a3a;

@@ -8,7 +8,7 @@
             </div>
             <div class="post-detail">
                 <div class="user-info">
-                    <img :src="'https://placehold.co/200'" alt="Profile Picture" class="profile-pic" />
+                    <img :src="`${post.user?.profilePicture}`" alt="Profile Picture" class="profile-pic" />
                     <div>
                         <p class="post-author">{{ post.user?.name }}</p>
                         <p class="post-discipline">{{ post.discipline?.name || "Disciplina não encontrada" }}</p>
@@ -154,6 +154,7 @@ onMounted(() => {
 
 .profile-pic {
     width: 4rem;
+    height: 4rem;
     border-radius: 100rem;
 }
 

@@ -2,8 +2,8 @@
     <div class="alunos-matriculados">
         <h2>Alunos matriculados</h2>
         <ul>
-            <li v-for="(aluno, index) in alunos.slice(0, 4)" :key="index" :class="{ ativo: index === 0 }">
-                <div class="avatar"></div>
+            <li v-for="(aluno, index) in alunos.slice(0, 5)" :key="index" :class="{ ativo: index === 0 }">
+                <img class="avatar" :src="`${aluno.profilePicture}`" alt="">
                 <div class="aluno-info">
                     <span>{{ aluno.name }}</span>
                     <small>{{ curso.name }}</small>
@@ -44,7 +44,6 @@ const waitForLocalStorage = (key, interval = 100) => {
 
 const fetchAlunos = async () => {
     try {
-        // Aguarda até que o authToken e o idCourse estejam disponíveis no localStorage
         const token = await waitForLocalStorage('authToken');
         const cursoId = await waitForLocalStorage('idCourse');
 
@@ -108,11 +107,11 @@ onMounted(() => {
 
 
 .avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #e0e0e0;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 10rem;
     margin-right: 10px;
+    border: 1px solid #a9a9a9
 }
 
 .aluno-info {

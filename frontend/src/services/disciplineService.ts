@@ -13,7 +13,6 @@ export const fetchDisciplinesByCourse = async (courseId: any) => {
         Authorization: `Bearer ${token()}`,
       },
     });
-    console.log(response.data,"disciplinas")
     return response.data;
   } catch (error) {
     console.error('Erro ao buscar disciplinas:', error);

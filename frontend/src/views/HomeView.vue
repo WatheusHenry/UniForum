@@ -66,8 +66,8 @@ const waitForLocalStorage = (key) => {
 };
 
 const loadPosts = async () => {
-  if (noMorePosts.value) return; 
-  
+  if (noMorePosts.value) return;
+
   try {
     const courseId = await waitForLocalStorage('idCourse');
     const authToken = await waitForLocalStorage('authToken');
@@ -80,6 +80,7 @@ const loadPosts = async () => {
     }
 
     posts.value = [...posts.value, ...fetchedPosts];
+    console.log(posts.value)
   } catch (error) {
     console.error("Erro ao buscar posts:", error);
   }
@@ -126,7 +127,8 @@ onMounted(() => {
 
 
         <Post v-for="(post, index) in posts" :key="index" :title="post.title" :content="post.content"
-          :createdAt="post.createdAt" :user="post.user" :discipline="post.discipline" :id="post.id" />
+          :createdAt="post.createdAt" :user="post.user" :discipline="post.discipline" :id="post.id"
+           />
 
         <div v-if="isLoading" class="loading-indicator">Carregando...</div>
       </main>
@@ -137,7 +139,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
 .no-posts-message {
   text-align: center;
   color: white;
@@ -217,7 +218,8 @@ onMounted(() => {
   transform: scale(0.98);
 }
 
-.loading-indicator, .no-more-posts {
+.loading-indicator,
+.no-more-posts {
   text-align: center;
   color: white;
   padding: 1rem;

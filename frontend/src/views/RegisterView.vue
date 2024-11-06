@@ -148,16 +148,16 @@ onMounted(async () => {
 }
 
 .image-preview-container {
-  width: 10vw;
-  height: 10vw;
+  width: 7vw;
+  height: 7vw;
   border-radius: 10rem;
   margin: auto;
   background-color: #1f1f1f;
 }
 
 .image-preview {
-  width: 10vw;
-  height: 10vw;
+  width: 7vw;
+  height: 7vw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -170,16 +170,16 @@ onMounted(async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 10vw;
-  height: 10vw;
+  width: 7vw;
+  height: 7vw;
   color: #bbb;
   font-size: 1rem;
   text-align: center;
 }
 
 .profile-preview {
-  width: 10vw;
-  height: 10vw;
+  min-width: 7vw;
+  height: 7vw;
   border-radius: 10rem;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 }
@@ -232,7 +232,7 @@ h1 {
   display: flex;
   flex-direction: column;
   
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .p-inputtext,
