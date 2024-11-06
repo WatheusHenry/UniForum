@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # Serviço da aplicação NestJS
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=forum
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - MINIO_PORT=9000
+      - MINIO_ENDPOINT=minio
+      - MINIO_BUCKET=my-bucket
+      - MINIO_ACCESS_KEY=admin
+      - MINIO_SECRET_KEY=password123
+      - MINIO_REGION=us-east-1
+      - MINIO_USE_SSL=false
+      - JWT_SECRET_KEY=JWT_SECRET_KEY
+      - CORS_ORIGIN=http://localhost
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      # - minio
+    networks:
+      - app-network
+
+  # Serviço MySQL
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: forum
+    ports:
+      - "3308:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  # # Serviço MinIO
+  # minio:
+  #   image: minio/minio
+  #   environment:
+  #     - MINIO_ROOT_USER=admin
+  #     - MINIO_ROOT_PASSWORD=password123
+  #   command: server /data --console-address ":9001"
+  #   ports:
+  #     - "9000:9000"  
+  #     - "9001:9001"  
+  #   volumes:
+  #     - minio_data:/data
+  #   networks:
+  #     - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db_data:
+  # minio_data:

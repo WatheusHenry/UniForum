@@ -14,6 +14,7 @@ export async function login(email: string, password: string) {
       console.log(response.data)
       localStorage.setItem('authToken', response.data.token.access_token)
       localStorage.setItem('idUser', response.data.token.userId)
+      
     }
 
     return response.data
