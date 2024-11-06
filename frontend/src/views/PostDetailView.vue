@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-parsing-error -->
 <template>
     <div class="container">
         <SideBar />
@@ -28,8 +29,12 @@
                     <button @click="addNewComment()">Responder</button>
                 </div>
                 <div v-for="comment in comments" :key="comment.id" class="comment">
-                    <p><strong>{{ comment.user.name }}</strong></p>
-                    <p>{{ comment.content }}</p>
+                    <img :src="`${ comment.user.profilePicture }`" alt="Profile Picture"
+                        class="profile-pic-response" />
+                    <div style="margin-top: 1rem;">
+                        <p><strong>{{ comment.user.name }}</strong></p>
+                        <p>{{ comment.content }}</p>
+                    </div>
                 </div>
             </section>
         </div>
@@ -65,6 +70,7 @@ const loadPostDetails = async () => {
 const loadComments = async (postId) => {
     try {
         comments.value = await fetchCommentsByPostId(postId);
+        console.log(comments.value)
     } catch (error) {
         console.error("Erro ao carregar comentários:", error);
     }
@@ -72,6 +78,7 @@ const loadComments = async (postId) => {
 
 const addNewComment = async () => {
     if (newComment.value.trim()) {
+        console.log(newComment.value)
         try {
             const addedComment = await addComment(route.params.id, newComment.value);
             comments.value.push(addedComment);
@@ -104,7 +111,7 @@ onMounted(() => {
     border-radius: 5rem;
     cursor: pointer;
     transition: 0.1s linear;
-    
+
 }
 
 .back-button:hover {
@@ -232,9 +239,9 @@ onMounted(() => {
 }
 
 .comment {
-    padding: 1.5rem 3rem;
+    padding: 1.5rem rem;
     border-bottom: 1px solid #303030;
-
+    display: flex;
     color: #eaeaea;
     font-size: 1rem;
     transition: background-color 0.3s ease;

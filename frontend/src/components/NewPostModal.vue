@@ -16,11 +16,8 @@
             {{ discipline.name }}
           </option>
         </select>
-        <!-- 
         <input type="file" @change="onImageSelect" accept="image/*" class="input-field file-input" />
-        <div v-if="post.profilePic" class="image-preview">
-          <img :src="post.profilePic" alt="Imagem selecionada" />
-        </div> -->
+
       </div>
 
       <footer class="modal-footer">

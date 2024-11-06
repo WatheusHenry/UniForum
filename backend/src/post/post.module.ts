@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuarioModule } from 'src/usuario/usuario.module';
 import { DisciplinaModule } from 'src/disciplina/disciplina.module';
 import { MessageModule } from 'src/message/message.module';
+import { MinioService } from 'src/minio.service';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { MessageModule } from 'src/message/message.module';
     forwardRef(() => MessageModule), // Use forwardRef
   ],
   controllers: [PostController],
-  providers: [PostService],
-  exports: [PostService, TypeOrmModule],
+  providers: [PostService, MinioService], // Add MinioService here if it's not part of another module
+  exports: [PostService, TypeOrmModule, MinioService],
 })
 export class PostModule {}

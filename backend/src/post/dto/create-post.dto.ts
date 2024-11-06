@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
-import { Disciplina } from 'src/disciplina/entities/disciplina.entity';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
 
 export class CreatePostDto {
@@ -18,4 +17,8 @@ export class CreatePostDto {
 
   @IsNotEmpty()
   disciplineID: number;
+
+  @IsOptional()
+  @IsString()
+  imageUrl?: string; // URL da imagem, opcional
 }

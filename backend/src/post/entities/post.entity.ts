@@ -22,6 +22,9 @@ export class Post {
   @Column({ name: 'content', type: 'longtext' })
   content: string;
 
+  @Column({ name: 'image_url', type: 'varchar', nullable: true })
+  imageUrl: string; // URL da imagem
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

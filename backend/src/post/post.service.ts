@@ -8,6 +8,7 @@ import { Post } from './entities/post.entity';
 import { In, Repository } from 'typeorm';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
 import { Disciplina } from 'src/disciplina/entities/disciplina.entity';
+import { MinioService } from 'src/minio.service';
 
 @Injectable()
 export class PostService {
@@ -18,10 +19,19 @@ export class PostService {
     private readonly usuarioRepository: Repository<Usuario>,
     @InjectRepository(Disciplina)
     private readonly disciplinaRepository: Repository<Disciplina>,
+    private readonly minioService: MinioService,
   ) {}
 
-  async create(createPostDto: CreatePostDto) {
+  async create(createPostDto: CreatePostDto, file?: Express.Multer.File) {
     const { ...rest } = createPostDto;
+
+    let imageUrl: string = null;
+
+    if (file) {
+      // Faz o upload da imagem no MinIO e obtém o URL
+      imageUrl = await this.minioService.uploadFile(file);
+    }
+
     const user = await this.usuarioRepository.findOne({
       where: { id: createPostDto.user.id },
     });
