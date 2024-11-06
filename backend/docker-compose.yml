@@ -10,21 +10,13 @@ services:
         - 8.8.8.8
         - 1.1.1.1
     environment:
-      - DB_CONNECTION=mysql
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_DATABASE=forum
-      - DB_USERNAME=root
-      - DB_PASSWORD=root
-      - MINIO_PORT=9000
-      - MINIO_ENDPOINT=minio
-      - MINIO_BUCKET=my-bucket
-      - MINIO_ACCESS_KEY=admin
-      - MINIO_SECRET_KEY=password123
-      - MINIO_REGION=us-east-1
-      - MINIO_USE_SSL=false
-      - JWT_SECRET_KEY=JWT_SECRET_KEY
-      - CORS_ORIGIN=http://localhost
+      - DB_CONNECTION=${DB_CONNECTION}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - CORS_ORIGIN=${CORS_ORIGIN}
     ports:
       - '3000:3000'
     depends_on:
