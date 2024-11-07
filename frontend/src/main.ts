@@ -9,6 +9,7 @@ import Button from 'primevue/button';
 import Aura from '@primevue/themes/aura';
 import FloatLabel from 'primevue/floatlabel';
 import Password from 'primevue/password';
+import Menu from 'primevue/menu';
 
 
 const app = createApp(App)
@@ -22,6 +23,7 @@ app.component('InputText', InputText);
 app.component('Button', Button);
 app.component('FloatLabel', FloatLabel);
 app.component('Password', Password);
+app.component('Menu', Menu);
 
 app.use(router)
 

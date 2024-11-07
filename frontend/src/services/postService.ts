@@ -17,21 +17,45 @@ export const fetchPosts = async (page: number, limit: number, courseId: any, aut
       `${API_URL}/post/curso/${courseId}?page=${page}&limit=${limit}`,
       {
         headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
+          Authorization: `Bearer ${authToken}`
+        }
       }
-    );
+    )
 
-    const posts = response.data;
+    const posts = response.data
     return posts.sort(
-      (a: { createdAt: string | number | Date }, b: { createdAt: string | number | Date }) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+      (a: { createdAt: string | number | Date }, b: { createdAt: string | number | Date }) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )
   } catch (error) {
-    console.error("Erro ao buscar posts:", error);
-    throw error;
+    console.error('Erro ao buscar posts:', error)
+    throw error
   }
-};
+}
 
+export const fetchPostsByUser = async (
+  page: any,
+  limit: any,
+  courseId: any,
+  authToken: any,
+  userId: any
+) => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/post/user/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      }
+    )
+    const posts = response.data
+    return posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+  } catch (error) {
+    console.error('Erro ao buscar posts:', error)
+    throw error
+  }
+}
 
 export const fetchPostById = async (id: number) => {
   try {

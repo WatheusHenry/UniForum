@@ -5,7 +5,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/HomeView.vue'
 import CadMateria from '@/views/MateriasView.vue'
 import PostDetailView from '@/views/PostDetailView.vue'
-
+import ProfileView from '@/views/ProfileView.vue'
 
 const isAuthenticated = () => {
   return !!localStorage.getItem('authToken')
@@ -56,6 +56,14 @@ const router = createRouter({
       path: '/post/:id',
       name: 'postDetail',
       component: PostDetailView,
+      beforeEnter: (to, from, next) => {
+        isAuthenticated() ? next() : next('/login')
+      }
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: ProfileView,
       beforeEnter: (to, from, next) => {
         isAuthenticated() ? next() : next('/login')
       }

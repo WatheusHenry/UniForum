@@ -1,10 +1,27 @@
-@import './base.css';
-@import '@fortawesome/fontawesome-free/css/all.css';
-@import 'primeicons/primeicons.css';
+@import "./base.css";
+@import "@fortawesome/fontawesome-free/css/all.css";
+@import "primeicons/primeicons.css";
 
-
-
-#app{
+#app {
     width: 100vw;
     margin: auto;
 }
+
+.p-menu {
+    background-color: #2c2f38 !important; 
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    border-color: #2c2f38 !important;
+    color: #afb0b1 !important;
+    transition: 0.5ms linear;
+}
+.p-menu-item-link	{
+    color: #afb0b1 !important;
+}
+.p-menu-item-link:hover	{
+    color: #2c2f38 !important;
+
+}
+
+
+

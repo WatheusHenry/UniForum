@@ -81,6 +81,25 @@ export class PostService {
     return post;
   }
 
+  async findByUserId(
+    userId: number,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<Post[]> {
+    page = page < 1 ? 1 : page;
+    limit = limit < 1 ? 10 : limit;
+
+    const [posts, total] = await this.postRepository.findAndCount({
+      where: { user: { id: userId } },
+      relations: ['user', 'discipline'],
+      skip: (page - 1) * limit,
+      take: limit,
+      order: { createdAt: 'DESC' },
+    });
+
+    return posts;
+  }
+
   async findByCursoId(
     cursoId: number,
     page: number = 1,

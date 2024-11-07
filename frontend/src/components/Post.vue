@@ -1,16 +1,23 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="post" @click="goToDetail">
     <div class="post-header">
-      <img :src="`${ profilePicture }`" alt="Profile Picture" class="profile-pic" />
+      <img :src="`${profilePicture}`" alt="Profile Picture" class="profile-pic" />
       <div class="post-info">
-        <p class="post-author">{{ userName }}</p>
-        <p class="post-discipline">{{ disciplineName }}</p>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <p class="post-author">{{ userName }}</p>
+          <p class="post-discipline">{{ disciplineName }}</p>
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <p class="post-date">{{ formattedDate }}</p>
+          <button class="menu-button" @click.stop="showMenu($event)">
+            <i class="pi pi-ellipsis-v"></i>
+          </button>
+          <Menu :model="menuItems" popup ref="menu" />
+        </div>
       </div>
     </div>
     <h2 class="post-title">{{ title }}</h2>
     <p class="post-content">{{ content }}</p>
-    <p class="post-date">{{ formattedDate }}</p>
     <div class="post-actions">
       <button class="action-button">
         <i class="fas fa-comment"></i> Comentar
@@ -23,12 +30,11 @@
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue';
+import { defineProps, computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-
 const router = useRouter();
-
+const menu = ref(null); // Referência ao Menu
 
 const props = defineProps({
   id: Number,
@@ -54,11 +60,38 @@ const formattedDate = computed(() => {
   });
 });
 
+const menuItems = [
+  {
+    label: 'Deletar',
+    icon: 'pi pi-trash',
+    command: () => handleDeletePost()
+  },
+  {
+    label: 'Denunciar',
+    icon: 'pi pi-exclamation-triangle',
+    command: () => handleReportPost()
+  }
+];
+
+const showMenu = (event) => {
+  menu.value.toggle(event);
+};
+
+const handleDeletePost = () => {
+  // Implementar a lógica para deletar o post
+  console.log('Deletar post:', props.id);
+};
+
+const handleReportPost = () => {
+  // Implementar a lógica para denunciar o post
+  console.log('Denunciar post:', props.id);
+};
 
 const goToDetail = () => {
   router.push({ name: 'postDetail', params: { id: props.id } });
 };
 </script>
+
 
 <style scoped>
 .post {
@@ -90,7 +123,9 @@ const goToDetail = () => {
 
 .post-info {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
 }
 
 .post-author {
@@ -99,17 +134,21 @@ const goToDetail = () => {
 }
 
 .post-discipline {
-  background-color: #2883a7;
+  background-color: #1e4f63;
   padding: 0rem 0.5rem;
   border-radius: 1rem;
   font-size: 0.9rem;
   color: #eeeeee;
   width: fit-content;
+  height: fit-content;
+
 }
 
 .post-date {
   font-size: 0.8rem;
   color: #a0a0a0;
+  height: fit-content;
+
 }
 
 .post-title {
@@ -157,4 +196,25 @@ const goToDetail = () => {
 .action-button i {
   font-size: 18px;
 }
+
+.menu-button {
+  z-index: 10;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  /* font-size: 24px; */
+  color: #ececec;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s, background-color 0.3s;
+}
+
+.menu-button:hover {
+  background-color: #4e4e4e;
+  border-radius: 5px;
+}
+
+
 </style>

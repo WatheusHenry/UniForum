@@ -3,7 +3,7 @@
     <div class="logoContainer">
       <img class="unimarLogo" src="../assets/images/logoUnimar.svg" alt="Logo" />
     </div>
-    <div class="profile">
+    <div class="profile" @click="profile()">
       <img class="profile-picture" :src="`
       ${user.profilePicture}`" alt="Profile Picture" />
       <div class="profile-details">
@@ -78,6 +78,17 @@ const logout = () => {
   router.push('/login');
 };
 
+const profile = () => {
+  router.push({ 
+    path: '/profile', 
+    query: { 
+      user: JSON.stringify(user.value), 
+      disciplinas: JSON.stringify(disciplinas.value) 
+    } 
+  });
+}
+
+
 onMounted(() => {
   loadUserData();
   watch(user, (newUser) => {
@@ -147,7 +158,10 @@ onMounted(() => {
   color: white;
   line-height: 0.5rem
 }
-
+i{
+  font-size: 1.5rem;
+  color: #c5c5c5;
+}
 .menu {
   padding: 15px;
   width: 200px;
@@ -177,7 +191,7 @@ onMounted(() => {
   font-size: 16px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 1rem;
   /* Espaçamento entre o ícone e o texto */
   padding: 10px;
   border-radius: 5px;
