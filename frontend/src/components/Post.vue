@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="post" @click="goToDetail">
     <div class="post-header">
@@ -19,7 +18,10 @@
     </div>
     <h2 class="post-title">{{ title }}</h2>
     <p class="post-content">{{ content }}</p>
-    <img v-if="imageUrl" :src="`${imageUrl}`" class="imagem" />
+    <div @click.stop="openImageModal()">
+
+      <img v-if="imageUrl" :src="`${imageUrl}`" class="imagem"  />
+    </div>
     <div class="post-actions">
       <button class="action-button">
         <i class="fas fa-comment"></i> Comentar
@@ -29,6 +31,15 @@
       </button>
     </div>
   </div>
+
+  <!-- Modal para exibir imagem maior -->
+  <Dialog header="Imagem do Post" modal  v-model="showImageModal"
+    style="width: 80vw; max-width: 800px; background-color: #303030; color: white;" :draggable="false">
+    <div>
+      teste
+    </div>
+    <!-- <img :src="imageUrl" class="expanded-image" /> -->
+  </Dialog>
 
   <Dialog header="Compartilhar Post" modal :closable="false" v-model="showShareModal" :visible="showShareModal"
     style="width: 30vw; background-color: #303030; border: none; color: white;" :draggable="false">
@@ -50,6 +61,7 @@ import { deletePost } from '@/services/postService';
 const router = useRouter();
 const menu = ref(null); // Referência ao Menu
 const showShareModal = ref(false); // Controle de exibição do modal
+const showImageModal = ref(false); // Controle do modal para imagem ampliada
 
 const props = defineProps({
   id: Number,
@@ -102,7 +114,7 @@ const handleDeletePost = async () => {
   console.log('Deletar post:', props.id);
   try {
     await deletePost(props.id);
-    console.log(`Post ${props.id} deletado com sucesso`);  // Use props.id here
+    console.log(`Post ${props.id} deletado com sucesso`);  // Use props.id aqui
   } catch (error) {
     console.error('Erro ao deletar o post:', error);
   }
@@ -130,6 +142,12 @@ const copyToClipboard = (url) => {
   }).catch((error) => {
     console.error('Falha ao copiar URL: ', error);
   });
+};
+
+// Abrir o modal de imagem ampliada
+const openImageModal = () => {
+  showImageModal.value = true;
+  console.log("dfads")
 };
 </script>
 
@@ -252,60 +270,17 @@ const copyToClipboard = (url) => {
   border-radius: 5px;
 }
 
-
-.url-container {
-  /* position: relative; */
-  /* display: flex; */
-  /* align-items: center; */
-  /* justify-content: space-between; */
-  display: flex;
-  justify-content: center;
-  width: 30rem;
-}
-
-.post-url {
-  width: 30rem;
-  background-color: #141414;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  color: #b3b3b3;
-  word-wrap: break-word;
-  margin-left: 3rem;
-}
-
-.copy-button {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: #1b1b1b9f;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  /* display: flex; */
-  /* align-items: center; */
-  gap: 0.5rem;
-  transition: background-color 0.3s ease;
-}
-
-.copy-button i {
-  font-size: 1.2rem;
-}
-
-.copy-button:hover {
-  background-color: #181818;
-}
-
-.url-container .copy-button {
-  position: absolute;
-  right: 15%;
-  top: 70%;
-  transform: translateY(-50%);
-}
-
 .imagem {
   width: 100%;
+  cursor: pointer;
+  border-radius: 1rem;
+  /* Para indicar que a imagem é clicável */
+}
+
+.expanded-image {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 </style>

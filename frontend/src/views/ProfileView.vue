@@ -140,6 +140,7 @@ onMounted(() => {
 
 .profile-container {
     width: 40vw;
+    overflow: auto;
     margin-top: 1rem;
     color: #fff;
     border-right: 1px solid #303030;
