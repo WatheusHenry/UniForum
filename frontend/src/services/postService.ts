@@ -41,16 +41,16 @@ export const fetchPostsByUser = async (
   userId: any
 ) => {
   try {
-    const response = await axios.get(
-      `${API_URL}/post/user/${userId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${authToken}`
-        }
+    const response = await axios.get(`${API_URL}/post/user/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`
       }
-    )
+    })
     const posts = response.data
-    return posts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    return posts.sort(
+      (a: { createdAt: string | number | Date }, b: { createdAt: string | number | Date }) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )
   } catch (error) {
     console.error('Erro ao buscar posts:', error)
     throw error
@@ -120,6 +120,20 @@ export const addComment = async (postId: number, commentContent: string) => {
     return response.data // Retorna o comentário adicionado
   } catch (error) {
     console.error('Erro ao adicionar comentário:', error)
+    throw error // Lança erro em caso de falha
+  }
+}
+
+export const deletePost = async (postId: number) => {
+  try {
+    const response = await axios.delete(`${API_URL}/post/${postId}`, {
+      headers: {
+        Authorization: `Bearer ${token()}` // Adiciona o token no cabeçalho
+      }
+    })
+    return response.data // Retorna os dados da resposta após a deleção
+  } catch (error) {
+    console.error(`Erro ao deletar o post com ID ${postId}:`, error)
     throw error // Lança erro em caso de falha
   }
 }

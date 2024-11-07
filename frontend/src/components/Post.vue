@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="post" @click="goToDetail">
     <div class="post-header">
@@ -44,6 +45,7 @@
 import { defineProps, computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Dialog from 'primevue/dialog';
+import { deletePost } from '@/services/postService';
 
 const router = useRouter();
 const menu = ref(null); // Referência ao Menu
@@ -96,8 +98,15 @@ const showMenu = (event) => {
   menu.value.toggle(event);
 };
 
-const handleDeletePost = () => {
+const handleDeletePost = async () => {
   console.log('Deletar post:', props.id);
+  try {
+    await deletePost(props.id);
+    console.log(`Post ${props.id} deletado com sucesso`);  // Use props.id here
+  } catch (error) {
+    console.error('Erro ao deletar o post:', error);
+  }
+
 };
 
 const handleReportPost = () => {
@@ -296,7 +305,7 @@ const copyToClipboard = (url) => {
   transform: translateY(-50%);
 }
 
-.imagem{
+.imagem {
   width: 100%;
 }
 </style>
