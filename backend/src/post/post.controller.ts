@@ -29,10 +29,11 @@ export class PostController {
   @UseInterceptors(FileInterceptor('image')) // Intercepta o arquivo enviado
   async create(
     @Body() createPostDto: CreatePostDto,
-    @UploadedFile() file: Express.Multer.File, // Recebe o arquivo
+    @UploadedFile() image: Express.Multer.File, // Recebe o arquivo
   ) {
-    return await this.postService.create(createPostDto, file);
+    return await this.postService.create(createPostDto, image);
   }
+
   @Get()
   async findAll(
     @Query('page') page: number = 1,

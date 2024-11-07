@@ -6,18 +6,28 @@
         <button class="close-button" @click="closeModal">×</button>
       </header>
 
+      <select v-model="post.disciplineID" class="input-field" style="margin-bottom: 1rem;">
+        <option disabled value="Selecione uma disciplina">Selecione uma disciplina</option>
+        <option v-for="discipline in disciplines" :key="discipline.id" :value="discipline.id">
+          {{ discipline.name }}
+        </option>
+      </select>
       <div class="modal-body">
         <input type="text" v-model="post.title" placeholder="Título" class="input-field" required />
         <textarea v-model="post.content" placeholder="Conteúdo" class="input-field textarea" required></textarea>
 
-        <select v-model="post.disciplineID" class="input-field">
-          <option disabled value="Selecione uma disciplina">Selecione uma disciplina</option>
-          <option v-for="discipline in disciplines" :key="discipline.id" :value="discipline.id">
-            {{ discipline.name }}
-          </option>
-        </select>
-        <input type="file" @change="onImageSelect" accept="image/*" class="input-field file-input" />
+        <input type="file" ref="fileInput" @change="onImageSelect" accept="image/*" class="file-input"
+          style="display: none;" />
 
+        <div v-if="post.imageUrl" class="image-preview">
+          <img :src="post.imageUrl" alt="Imagem selecionada" />
+          <button class="remove-button" @click="removeImage">
+            <i class="pi pi-times"></i>
+          </button>
+        </div>
+        <button class="upload-button" @click="triggerFileInput">
+          <i class="pi pi-image"></i>
+        </button>
       </div>
 
       <footer class="modal-footer">
@@ -27,6 +37,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { fetchDisciplinesByCourse } from '@/services/disciplineService';
@@ -43,10 +54,13 @@ const post = ref({
   createdAt: new Date().toISOString(),
   user: null,
   disciplineID: null,
-  profilePic: null,
+  imageUrl: null,
+  image: null
 });
 
 const disciplines = ref([]);
+
+const fileInput = ref(null);
 
 const closeModal = () => {
   emit('close');
@@ -60,7 +74,9 @@ const resetForm = () => {
   post.value.createdAt = new Date().toISOString();
   post.value.user = null;
   post.value.disciplineID = null;
-  post.value.profilePic = null;
+  post.value.imageUrl = null;
+  post.value.image = null;
+
 };
 
 const loadDisciplines = async () => {
@@ -74,22 +90,51 @@ const loadDisciplines = async () => {
 const onImageSelect = (event) => {
   const file = event.target.files[0];
   if (file) {
-    post.value.profilePic = URL.createObjectURL(file);
+    post.value.image = file;  // Armazena o arquivo de imagem em vez da URL
+    post.value.imageUrl = URL.createObjectURL(file);
   }
 };
 
-const submitPost = () => {
+const triggerFileInput = () => {
+  fileInput.value.click();
+};
+
+const removeImage = () => {
+  post.value.imageUrl = null;
+};
+
+const submitPost = async () => {
   if (!post.value.title || !post.value.content || !post.value.disciplineID) {
     alert('Por favor, preencha todos os campos.');
     return;
   }
-  emit('post-submitted', { ...post.value });
+
+  try {
+    // Cria um objeto FormData para enviar o arquivo e os outros dados
+    const formData = new FormData();
+    formData.append('title', post.value.title);
+    formData.append('content', post.value.content);
+    formData.append('disciplineID', post.value.disciplineID);
+    formData.append('createdAt', post.value.createdAt);
+    formData.append('user', JSON.stringify(post.value.user));
+
+    if (post.value.image) {
+      formData.append('image', post.value.image);
+    }
+
+    emit('post-submitted', formData);
+    closeModal();
+  } catch (error) {
+    console.error('Erro ao adicionar a publicação:', error);
+    alert('Erro ao enviar a publicação.');
+  }
 };
 
 onMounted(() => {
   loadDisciplines();
 });
 </script>
+
 
 <style scoped>
 .modal-overlay {
@@ -109,8 +154,8 @@ onMounted(() => {
   background-color: #171718;
   padding: 1.5rem;
   border-radius: 8px;
-  width: 90%;
-  max-width: 500px;
+  width: 40vw;
+  height: 70vh;
   color: #ffffff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
@@ -133,14 +178,19 @@ onMounted(() => {
 .input-field {
   width: 100%;
   padding: 0.8rem;
-  margin-top: 1rem;
   border-radius: 5px;
-  font-size: 1.2rem;
+  font-size: 1rem;
   background-color: #121213;
-  border: 1px solid #555;
   color: #ffffff;
+  border: none;
+}
+
+.modal-body {
+  overflow-y: auto;
+  background-color: #121213;
 
 }
+
 option {
   color: white;
 }
@@ -159,9 +209,9 @@ option {
 }
 
 .image-preview {
-  margin-top: 1rem;
+  margin-inline: 2rem;
   display: flex;
-  justify-content: center;
+  height: 15rem;
 }
 
 .image-preview img {
@@ -169,10 +219,29 @@ option {
   border-radius: 5px;
 }
 
+.upload-button {
+  background-color: transparent;
+  color: rgb(34, 137, 255);
+  border: none;
+  margin: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 10rem;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.upload-button:hover {
+  background-color: #007bff4b;
+}
+
 .modal-footer {
   display: flex;
+  margin-top: 1rem;
+
   justify-content: space-between;
-  margin-top: 3rem;
+
 }
 
 .submit-button {
@@ -194,6 +263,23 @@ option {
   font-weight: 600;
   padding: 0.5rem 1rem;
   border-radius: 1rem;
+  cursor: pointer;
+}
+
+input {
+  border: none;
+  outline: none;
+}
+
+.remove-button {
+  position: absolute;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 10rem;
+  background-color: #00000083;
+  border: none;
+  color: white;
+  margin: 0.5rem;
   cursor: pointer;
 }
 </style>

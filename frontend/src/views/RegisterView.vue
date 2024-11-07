@@ -119,7 +119,6 @@ const handleRegister = async () => {
   };
 
   try {
-    console.log(newUser);
     const response = await register(newUser, profilePicture.value);
     if (response) {
       router.push('/home');

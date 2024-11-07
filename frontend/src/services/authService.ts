@@ -11,7 +11,6 @@ export async function login(email: string, password: string) {
     })
 
     if (response.data) {
-      console.log(response.data)
       localStorage.setItem('authToken', response.data.token.access_token)
       localStorage.setItem('idUser', response.data.token.userId)
     }
@@ -38,7 +37,6 @@ export async function register(
 
   if (profilePicture && profilePicture instanceof File) {
     formData.append('profilePicture', profilePicture);
-    console.log("arquivo adicionado")
   }
 
   try {

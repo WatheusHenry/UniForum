@@ -4,16 +4,22 @@
         <div class="profile-container">
             <SearchBar />
             <div class="profile-header">
-                <div style="display: flex;justify-content: space-between;width: 100%;align-items: center;margin-bottom: 1rem;">
+                <div
+                    style="display: flex;justify-content: space-between;width: 100%;align-items: center;margin-bottom: 1rem;">
                     <div style="display: flex;gap: 2rem;">
-
-                        <img class="profile-picture" :src="user.profilePicture" alt="Profile Picture" />
+                        <div class="profile-picture-wrapper" @mouseenter="isHovering = true"
+                            @mouseleave="isHovering = false" @click="chooseProfilePicture">
+                            <img class="profile-picture" :src="user.profilePicture" alt="Profile Picture" />
+                            <input type="file" ref="fileInput" @change="handleProfilePictureChange"
+                                style="display: none" />
+                            <div class="edit-icon" v-if="isHovering">
+                                <i class="pi pi-pencil"></i>
+                            </div>
+                        </div>
                         <div class="profile-info">
                             <h2>{{ user.name }}</h2>
                             <p>{{ user.curso?.name }}</p>
                             <p>{{ user.currentTerm }}</p>
-
-
                         </div>
                     </div>
                     <button @click="editMode = !editMode" class="edit-button">
@@ -23,7 +29,6 @@
                 <h3>Publicações</h3>
             </div>
 
-            <!-- Formulário de edição do perfil -->
             <div v-if="editMode" class="edit-form">
                 <label>Nome:
                     <input v-model="user.name" type="text" />
@@ -34,28 +39,11 @@
                 <button @click="saveProfile" class="save-button">Salvar</button>
             </div>
 
-
-            <!-- Publicações do usuário -->
             <div class="user-posts">
-                <!-- <ul>
-                    <li v-for="(post, index) in userPosts" :key="index">
-                        <h4>{{ post.title }}</h4>
-                        <p>{{ post.content }}</p>
-                    </li>
-                </ul> -->
                 <Post v-for="post in userPosts" :key="post.id" :id="post.id" :title="post.title" :content="post.content"
                     :createdAt="post.createdAt" :user="post.user" :discipline="post.discipline" />
             </div>
         </div>
-        <!-- Matérias matriculadas
-        <div class="enrolled-subjects">
-            <h3>Matérias matriculadas</h3>
-            <ul>
-                <li v-for="(disciplina, index) in disciplinas" :key="index">
-                    {{ disciplina.name }}
-                </li>
-            </ul>
-        </div> -->
     </div>
 </template>
 
@@ -64,16 +52,16 @@ import Post from '@/components/Post.vue';
 import SearchBar from '@/components/SearchBar.vue';
 import SideBar from '@/components/SideBar.vue';
 import { fetchPostsByUser } from '@/services/postService';
+import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 
-
-
 const route = useRoute();
 const user = ref({});
-const disciplinas = ref([]);
 const userPosts = ref([]);
 const editMode = ref(false);
+const fileInput = ref(null);
+const isHovering = ref(false);
 
 const loadUserPosts = async () => {
     try {
@@ -85,20 +73,60 @@ const loadUserPosts = async () => {
 
         const posts = await fetchPostsByUser(page, limit, courseId, authToken, userId);
         userPosts.value = posts;
-        console.log(userPosts.value)
     } catch (error) {
         console.error("Erro ao carregar publicações do usuário:", error);
     }
 };
 
+// Lógica para salvar o perfil
 const saveProfile = () => {
-    console.log("Perfil atualizado:", user.value);
     editMode.value = false;
+};
+
+const triggerFileInput = () => {
+    fileInput.value.click();  // Aciona o input de arquivo
+};
+
+// Função para escolher a foto de perfil
+const chooseProfilePicture = () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+
+    fileInput.addEventListener('change', handleFileSelect);
+    fileInput.click();
+};
+
+const handleFileSelect = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await axios.post(
+                `http://localhost:3000/user/updateProfilePicture/${user.value.id}`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+
+            // Atualizar a foto de perfil no estado
+            user.value.profilePicture = response.data.user.profilePicture;
+            alert('Foto de perfil atualizada com sucesso');
+        } catch (error) {
+            console.error('Erro ao atualizar foto de perfil:', error);
+            alert('Erro ao atualizar foto de perfil');
+        }
+    }
 };
 
 onMounted(() => {
     user.value = JSON.parse(route.query.user || '{}');
-    disciplinas.value = JSON.parse(route.query.disciplinas || '[]');
     loadUserPosts(); // Carrega as publicações do usuário ao montar o componente
 });
 </script>
@@ -126,7 +154,6 @@ onMounted(() => {
     padding: 3rem 3rem 0.1rem 3rem;
     border-top: 1px solid #303030;
     border-bottom: 1px solid #303030;
-
 }
 
 .profile-header h3 {
@@ -135,11 +162,50 @@ onMounted(() => {
     border-bottom: #0056b3 3px solid;
 }
 
+.profile-picture-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
 .profile-picture {
-    width: 8rem;
-    height: 8rem;
+    min-width: 8rem;
+    min-height: 8rem;
+    max-width: 8rem;
+    max-height: 8rem;
     border-radius: 50%;
     background-color: #ddd;
+    transition: all 0.3s ease;
+}
+
+.profile-picture-wrapper:hover .profile-picture {
+    background-color: #2929296c;
+    filter: brightness(0.7);
+    cursor: pointer;
+    /* Torna a imagem mais escura */
+}
+
+.edit-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Fundo escuro para o ícone */
+    color: white;
+    border-radius: 50%;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+.profile-picture-wrapper:hover .edit-icon {
+    opacity: 1;
+    /* Torna o ícone visível ao passar o mouse */
 }
 
 .profile-info h2 {
@@ -187,7 +253,6 @@ onMounted(() => {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
-
 
 .enrolled-subjects {
     margin-top: 1.5rem;

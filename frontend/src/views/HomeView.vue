@@ -31,8 +31,7 @@ const handleAddPost = async (newPost) => {
   const courseId = localStorage.getItem('idCourse');
 
   Object.assign(newPost, { user: { id: userid }, course: { id: courseId } });
-  console.log(newPost);
-
+  
   try {
     const createdPost = await addPost(newPost);
     posts.value.unshift(createdPost);
@@ -73,14 +72,13 @@ const loadPosts = async () => {
     const authToken = await waitForLocalStorage('authToken');
 
     const fetchedPosts = await fetchPosts(page.value, limit.value, courseId, authToken);
-
+    
     if (fetchedPosts.length === 0) {
       noMorePosts.value = true;
       return;
     }
 
     posts.value = [...posts.value, ...fetchedPosts];
-    console.log(posts.value)
   } catch (error) {
     console.error("Erro ao buscar posts:", error);
   }
@@ -127,7 +125,7 @@ onMounted(() => {
 
 
         <Post v-for="(post, index) in posts" :key="index" :title="post.title" :content="post.content"
-          :createdAt="post.createdAt" :user="post.user" :discipline="post.discipline" :id="post.id"
+          :createdAt="post.createdAt" :user="post.user" :discipline="post.discipline" :id="post.id" :imageUrl="post.imageUrl"
            />
 
         <div v-if="isLoading" class="loading-indicator">Carregando...</div>

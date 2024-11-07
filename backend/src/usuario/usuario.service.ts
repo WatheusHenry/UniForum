@@ -113,6 +113,22 @@ export class UsuarioService {
     return await this.usuarioRepository.save(usuarioExistente); // Use await
   }
 
+  // Método para atualizar a foto de perfil
+  async updateProfilePicture(id: number, fileUrl: string) {
+    const usuario = await this.usuarioRepository.findOne({
+      where: { id },
+    });
+
+    if (!usuario) {
+      throw new NotFoundException(`Usuário com ID ${id} não encontrado`);
+    }
+
+    // Atualiza a foto de perfil do usuário
+    usuario.profilePicture = fileUrl;
+
+    return await this.usuarioRepository.save(usuario);
+  }
+
   async remove(id: number) {
     const usuarioExistente = await this.findOneById(id); // Verifica se o usuário existe
 

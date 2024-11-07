@@ -8,7 +8,7 @@
                 </button>
             </div>
             <Post :key="post.id" :id="post.id" :title="post.title" :content="post.content" :createdAt="post.createdAt"
-                :user="post.user" :discipline="post.discipline" />
+                :user="post.user" :discipline="post.discipline" :imageUrl="post.imageUrl" />
 
             <section class="comments-section">
                 <div class="comment-input">
@@ -76,7 +76,6 @@ const loadPostDetails = async () => {
 const loadComments = async (postId) => {
     try {
         comments.value = await fetchCommentsByPostId(postId);
-        console.log(comments.value);
     } catch (error) {
         console.error("Erro ao carregar comentários:", error);
     }

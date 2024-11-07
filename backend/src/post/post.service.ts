@@ -26,9 +26,7 @@ export class PostService {
     const { ...rest } = createPostDto;
 
     let imageUrl: string = null;
-
     if (file) {
-      // Faz o upload da imagem no MinIO e obtém o URL
       imageUrl = await this.minioService.uploadFile(file);
     }
 
@@ -43,6 +41,7 @@ export class PostService {
       ...rest,
       user,
       discipline,
+      imageUrl,
     });
 
     await this.postRepository.save(post);

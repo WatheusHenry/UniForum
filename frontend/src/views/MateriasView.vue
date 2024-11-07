@@ -40,7 +40,6 @@ const fetchDisciplines = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(disciplinas.value)
     disciplinas.value = response.data;
   } catch (error) {
     console.error('Erro ao buscar disciplinas:', error);
