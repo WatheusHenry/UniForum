@@ -30,6 +30,9 @@ export class Message {
   @JoinColumn({ name: 'user_id' })
   user: Usuario;
 
+  @Column({ name: 'image_url', type: 'varchar', nullable: true })
+  imageUrl: string; // URL da imagem
+
   @ManyToOne(() => Message, (message) => message.replies, {
     onDelete: 'CASCADE',
   })

@@ -38,6 +38,8 @@
                     <div style="margin-top: 1rem;">
                         <p><strong>{{ comment.user.name }}</strong></p>
                         <p>{{ comment.content }}</p>
+
+                        <img :src="`${comment.imageUrl}`" style="width: 90%;border-radius: 1rem;" alt="">
                     </div>
                 </div>
             </section>
@@ -68,6 +70,7 @@ const loadPostDetails = async () => {
         const postId = route.params.id;
         post.value = await fetchPostById(postId);
         await loadComments(postId);
+        console.log(post.value, postId)
     } catch (error) {
         console.error("Erro ao carregar os detalhes do post:", error);
     }
@@ -76,6 +79,7 @@ const loadPostDetails = async () => {
 const loadComments = async (postId) => {
     try {
         comments.value = await fetchCommentsByPostId(postId);
+        console.log(comments.value, comments)
     } catch (error) {
         console.error("Erro ao carregar comentários:", error);
     }
@@ -89,8 +93,7 @@ const clearImage = () => {
 const addNewComment = async () => {
     if (newComment.value.trim() || selectedImage.value) {
         try {
-            const commentData = { content: newComment.value, image: selectedImage.value };
-            const addedComment = await addComment(route.params.id, commentData);
+            const addedComment = await addComment(route.params.id, newComment.value, selectedImage.value);
             comments.value.push(addedComment);
             newComment.value = '';
             imagePreview.value = null;
@@ -100,6 +103,7 @@ const addNewComment = async () => {
         }
     }
 };
+
 
 const goBack = () => {
     router.back();
@@ -155,12 +159,14 @@ onMounted(() => {
     height: 2rem;
     margin: 0.5rem;
     border-radius: 10rem;
-    z-index: 1; /* Garante que o botão fique acima da imagem */
+    z-index: 1;
+    /* Garante que o botão fique acima da imagem */
 }
 
 .remove-button:hover {
-    color: #ffffff; 
-    background-color: #00000054;/* Altere a cor de hover, se desejar */
+    color: #ffffff;
+    background-color: #00000054;
+    /* Altere a cor de hover, se desejar */
 }
 
 
@@ -362,7 +368,8 @@ button:active {
 }
 
 .comment {
-    padding: 1.5rem rem;
+    margin-bottom: 1rem;
+    padding-bottom: 2rem;
     border-bottom: 1px solid #303030;
     display: flex;
     color: #eaeaea;

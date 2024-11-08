@@ -17,4 +17,8 @@ export class CreateMessageDto {
   @IsOptional()
   @IsNumber()
   parentMessageId?: number;
+
+  @IsOptional()
+  @IsString()
+  imageUrl?: string; // URL da imagem,
 }

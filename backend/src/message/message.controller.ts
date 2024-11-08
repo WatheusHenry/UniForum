@@ -7,12 +7,15 @@ import {
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('message')
 @ApiTags('Message')
@@ -22,8 +25,12 @@ export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 
   @Post()
-  async create(@Body() createMessageDto: CreateMessageDto) {
-    return await this.messageService.create(createMessageDto);
+  @UseInterceptors(FileInterceptor('image'))
+  async create(
+    @Body() createMessageDto: CreateMessageDto,
+    @UploadedFile() image: Express.Multer.File, // Recebe o arquivo
+  ) {
+    return await this.messageService.create(createMessageDto, image);
   }
 
   @Get('/post/:postId')

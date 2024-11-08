@@ -122,7 +122,7 @@ onMounted(() => {
 .profile {
   display: flex;
   margin-inline: 1rem;
-  width: 17rem;
+  width: 18rem;
   padding: 0.5rem;
   border-radius: 1rem;
 

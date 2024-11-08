@@ -6,6 +6,7 @@ import { Message } from './entities/message.entity';
 import { Repository } from 'typeorm';
 import { Post } from 'src/post/entities/post.entity';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
+import { MinioService } from 'src/minio.service';
 
 @Injectable()
 export class MessageService {
@@ -16,10 +17,16 @@ export class MessageService {
     private readonly postRepository: Repository<Post>,
     @InjectRepository(Usuario)
     private readonly usuarioRepository: Repository<Usuario>,
+    private readonly minioService: MinioService,
   ) {}
 
-  async create(createMessageDto: CreateMessageDto) {
+  async create(createMessageDto: CreateMessageDto, file?: Express.Multer.File) {
     const { postId, userId, parentMessageId, content } = createMessageDto;
+
+    let imageUrl: string = null;
+    if (file) {
+      imageUrl = await this.minioService.uploadFile(file);
+    }
 
     const post = await this.postRepository.findOne({ where: { id: postId } });
     const user = await this.usuarioRepository.findOne({
@@ -38,6 +45,7 @@ export class MessageService {
       post,
       user,
       parentMessage,
+      imageUrl,
     });
 
     return await this.messageRepository.save(newMessage);

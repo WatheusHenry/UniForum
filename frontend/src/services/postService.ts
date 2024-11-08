@@ -100,29 +100,39 @@ export const fetchCommentsByPostId = async (postId: number) => {
   }
 }
 
-export const addComment = async (postId: number, commentContent: string) => {
+export const addComment = async (
+  postId: string | string[],
+  newComment: string,
+  selectedImage: File
+) => {
+  const userId = localStorage.getItem('idUser') || "";
   try {
-    const userId = localStorage.getItem('idUser')
+    const formData = new FormData();
+    formData.append('content', newComment);
+    formData.append('userId', userId);
+    formData.append('postId', postId as string); 
+
+    if (selectedImage) {
+      formData.append('image', selectedImage);
+    }
+
     const response = await axios.post(
       `${API_URL}/message`,
-      {
-        postId,
-        content: commentContent,
-        userId
-      },
+      formData,
       {
         headers: {
-          Authorization: `Bearer ${token()}` // Adiciona o token no cabeçalho
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token()}` 
         }
       }
-    )
-
-    return response.data // Retorna o comentário adicionado
+    );
+    return response.data;
   } catch (error) {
-    console.error('Erro ao adicionar comentário:', error)
-    throw error // Lança erro em caso de falha
+    console.error('Erro ao enviar o comentário:', error);
+    throw error;
   }
 }
+
 
 export const deletePost = async (postId: number) => {
   try {

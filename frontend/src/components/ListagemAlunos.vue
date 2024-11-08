@@ -2,7 +2,7 @@
     <div class="alunos-matriculados">
         <h2>Alunos matriculados</h2>
         <ul>
-            <li v-for="(aluno, index) in alunos.slice(0, 5)" :key="index" :class="{ ativo: index === 0 }">
+            <li v-for="(aluno, index) in alunos.slice(0, 4)" :key="index" :class="{ ativo: index === 0 }">
                 <img class="avatar" :src="`${aluno.profilePicture}`" alt="">
                 <div class="aluno-info">
                     <span>{{ aluno.name }}</span>
@@ -17,8 +17,7 @@
             </div>
             <p>Manter-se organizado é fundamental para o sucesso nos estudos! Tente criar um cronograma semanal, onde
                 você pode definir horários específicos para suas aulas, revisões e descanso. Dessa forma, você consegue
-                equilibrar seus estudos e ainda ter tempo para relaxar. Lembre-se: a constância é a chave para o
-                aprendizado eficaz!"</p>
+                equilibrar seus estudos e ainda ter tempo para relaxar."</p>
         </div>
     </div>
 </template>

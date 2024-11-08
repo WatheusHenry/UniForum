@@ -16,24 +16,27 @@
         </div>
       </div>
     </div>
-    <h2 class="post-title">{{ title }}</h2>
-    <p class="post-content">{{ content }}</p>
-    <div @click.stop="openImageModal()">
+    <div style="padding-inline: 4rem;">
 
-      <img v-if="imageUrl" :src="`${imageUrl}`" class="imagem"  />
-    </div>
-    <div class="post-actions">
-      <button class="action-button">
-        <i class="fas fa-comment"></i> Comentar
-      </button>
-      <button class="action-button" @click.stop="openShareModal">
-        <i class="fas fa-share-from-square"></i> Compartilhar
-      </button>
+      <h2 class="post-title">{{ title }}</h2>
+      <p class="post-content">{{ content }}</p>
+      <div @click.stop="openImageModal()" style="margin: auto;display: flex;justify-content: center;">
+
+        <img v-if="imageUrl" :src="`${imageUrl}`" class="imagem" />
+      </div>
+      <div class="post-actions">
+        <button class="action-button">
+          <i class="fas fa-comment"></i> Comentar
+        </button>
+        <button class="action-button" @click.stop="openShareModal">
+          <i class="fas fa-share-from-square"></i> Compartilhar
+        </button>
+      </div>
     </div>
   </div>
 
   <!-- Modal para exibir imagem maior -->
-  <Dialog header="Imagem do Post" modal  v-model="showImageModal"
+  <Dialog header="Imagem do Post" modal v-model="showImageModal"
     style="width: 80vw; max-width: 800px; background-color: #303030; color: white;" :draggable="false">
     <div>
       teste
@@ -154,7 +157,7 @@ const openImageModal = () => {
 <style scoped>
 .post {
   cursor: pointer;
-  padding: 1rem 3rem;
+  padding: 1rem 1rem;
   border-bottom: 1px solid #525151;
   transition: 0.1s linear;
   color: white;
@@ -166,8 +169,9 @@ const openImageModal = () => {
 
 .post-header {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   gap: 1rem;
+  vertical-align: bottom;
 }
 
 .profile-pic {
@@ -180,9 +184,11 @@ const openImageModal = () => {
 
 .post-info {
   display: flex;
-  align-items: center;
+  height: fit-content;
+  /* align-items: center; */
   justify-content: space-between;
   width: 90%;
+
 }
 
 .post-author {
@@ -209,11 +215,11 @@ const openImageModal = () => {
 .post-title {
   font-size: 1.3rem;
   font-weight: bold;
-  margin-top: 1rem;
+  
 }
 
 .post-content {
-  margin-top: 1rem;
+  margin-bottom: 1rem;
   font-size: 0.95rem;
   line-height: 1.5;
   overflow-wrap: break-word;
@@ -271,9 +277,10 @@ const openImageModal = () => {
 }
 
 .imagem {
-  width: 100%;
+  width: 80%;
   cursor: pointer;
   border-radius: 1rem;
+  background-color: #171717;
   /* Para indicar que a imagem é clicável */
 }
 
