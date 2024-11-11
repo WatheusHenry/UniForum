@@ -105,34 +105,29 @@ export const addComment = async (
   newComment: string,
   selectedImage: File
 ) => {
-  const userId = localStorage.getItem('idUser') || "";
+  const userId = localStorage.getItem('idUser') || ''
   try {
-    const formData = new FormData();
-    formData.append('content', newComment);
-    formData.append('userId', userId);
-    formData.append('postId', postId as string); 
+    const formData = new FormData()
+    formData.append('content', newComment)
+    formData.append('userId', userId)
+    formData.append('postId', postId as string)
 
     if (selectedImage) {
-      formData.append('image', selectedImage);
+      formData.append('image', selectedImage)
     }
 
-    const response = await axios.post(
-      `${API_URL}/message`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token()}` 
-        }
+    const response = await axios.post(`${API_URL}/message`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token()}`
       }
-    );
-    return response.data;
+    })
+    return response.data
   } catch (error) {
-    console.error('Erro ao enviar o comentário:', error);
-    throw error;
+    console.error('Erro ao enviar o comentário:', error)
+    throw error
   }
 }
-
 
 export const deletePost = async (postId: number) => {
   try {
@@ -145,5 +140,19 @@ export const deletePost = async (postId: number) => {
   } catch (error) {
     console.error(`Erro ao deletar o post com ID ${postId}:`, error)
     throw error // Lança erro em caso de falha
+  }
+}
+
+export const fetchMateriaById = async (materiaId: number) => {
+  try {
+    const response = await axios.get(`${API_URL}/post/materia/${materiaId}`, {
+      headers: {
+        Authorization: `Bearer ${token()}` // Adiciona o token no cabeçalho
+      }
+    })
+    return response.data
+  } catch (error) {
+    console.error('Erro ao buscar a matéria:', error)
+    throw error
   }
 }

@@ -1,11 +1,11 @@
 import Register from '@/views/RegisterView.vue'
 import Login from '../views/LoginView.vue'
-import Materia from '@/views/MateriaPublications.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/HomeView.vue'
 import CadMateria from '@/views/MateriasView.vue'
 import PostDetailView from '@/views/PostDetailView.vue'
 import ProfileView from '@/views/ProfileView.vue'
+import MateriaDetails from '@/views/MateriaDetails.vue'
 
 const isAuthenticated = () => {
   return !!localStorage.getItem('authToken')
@@ -29,14 +29,6 @@ const router = createRouter({
       component: Register
     },
     {
-      path: '/materia',
-      name: 'materia',
-      component: Materia,
-      beforeEnter: (to, from, next) => {
-        isAuthenticated() ? next() : next('/login')
-      }
-    },
-    {
       path: '/home',
       name: 'homePage',
       component: Home,
@@ -51,6 +43,12 @@ const router = createRouter({
       beforeEnter: (to, from, next) => {
         isAuthenticated() ? next() : next('/login')
       }
+    },
+    {
+      path: '/materia/:materiaId',
+      name: 'MateriaDetails',
+      component: MateriaDetails,
+      props: true
     },
     {
       path: '/post/:id',
