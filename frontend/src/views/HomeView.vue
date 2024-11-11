@@ -27,10 +27,6 @@ const closeModal = () => {
 };
 
 const handleAddPost = async (newPost) => {
-  const userid = localStorage.getItem('idUser');
-  const courseId = localStorage.getItem('idCourse');
-
-  Object.assign(newPost, { user: { id: userid }, course: { id: courseId } });
 
   try {
     const createdPost = await addPost(newPost);

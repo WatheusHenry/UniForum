@@ -31,6 +31,7 @@ export class PostController {
     @Body() createPostDto: CreatePostDto,
     @UploadedFile() image: Express.Multer.File, // Recebe o arquivo
   ) {
+    console.log(createPostDto);
     return await this.postService.create(createPostDto, image);
   }
 

@@ -30,9 +30,14 @@ export class PostService {
       imageUrl = await this.minioService.uploadFile(file);
     }
 
+    console.log(createPostDto.user);
+
+    // const userId = Number(createPostDto.user.id);
     const user = await this.usuarioRepository.findOne({
-      where: { id: createPostDto.user.id },
+      where: { id: createPostDto.user },
     });
+    console.log(user);
+
     const discipline = await this.disciplinaRepository.findOne({
       where: { id: createPostDto.disciplineID },
     });
@@ -139,10 +144,21 @@ export class PostService {
     return { posts, total, disciplineName };
   }
 
-  async update(id: number, updatePostDto: Partial<UpdatePostDto>) {
-    const postExistente = await this.findOne(id); // Reutilizando o método findOne
+  async update(id: number, updatePostDto: UpdatePostDto) {
+    const { user, ...rest } = updatePostDto;
 
-    await this.postRepository.update(id, updatePostDto);
+    let userEntity = null;
+    if (user) {
+      userEntity = await this.usuarioRepository.findOne({
+        where: { id: user },
+      });
+    }
+
+    await this.postRepository.update(id, {
+      ...rest,
+      user: userEntity, //
+    });
+
     return this.postRepository.findOne({
       where: { id },
       relations: ['user', 'discipline'],

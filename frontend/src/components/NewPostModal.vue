@@ -108,22 +108,24 @@ const submitPost = async () => {
     alert('Por favor, preencha todos os campos.');
     return;
   }
+  console.log(post)
 
   try {
-    // Cria um objeto FormData para enviar o arquivo e os outros dados
+    const userId = localStorage.getItem('idUser');
+
     const formData = new FormData();
     formData.append('title', post.value.title);
     formData.append('content', post.value.content);
     formData.append('disciplineID', post.value.disciplineID);
     formData.append('createdAt', post.value.createdAt);
-    formData.append('user', JSON.stringify(post.value.user));
+    formData.append('user', userId);
 
     if (post.value.image) {
       formData.append('image', post.value.image);
     }
 
     emit('post-submitted', formData);
-    closeModal();
+    // closeModal();
   } catch (error) {
     console.error('Erro ao adicionar a publicação:', error);
     alert('Erro ao enviar a publicação.');

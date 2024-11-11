@@ -8,7 +8,7 @@
           <h1>Matérias</h1>
         </header>
         <div class="post-container">
-          <div v-for="(disciplina, index) in disciplinas" :key="index" class="post">
+          <div v-for="(disciplina, index) in disciplinas" :key="index" class="post" @click="SeeDiscipline(disciplina)">
             <div class="post-header">
               <img class="icon" src="../assets/images/materia.svg" alt="Matéria" />
               <p class="post-title">{{ disciplina.name }}</p>
@@ -28,7 +28,9 @@ import SearchBar from '@/components/SearchBar.vue';
 import SideBar from '@/components/SideBar.vue';
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const disciplinas = ref([]);
 
 const fetchDisciplines = async () => {
@@ -44,6 +46,13 @@ const fetchDisciplines = async () => {
   } catch (error) {
     console.error('Erro ao buscar disciplinas:', error);
   }
+}
+
+const SeeDiscipline = (disciplina) => {
+  router.push({
+    path: `/materia/${disciplina.id}`,
+    
+  });
 }
 
 onMounted(() => {
@@ -123,6 +132,7 @@ onMounted(() => {
 
 .post:hover {
   transform: translateY(-5px);
+  cursor: pointer;
 }
 
 .post-header {
