@@ -6,6 +6,7 @@ import CadMateria from '@/views/MateriasView.vue'
 import PostDetailView from '@/views/PostDetailView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import MateriaDetails from '@/views/MateriaDetails.vue'
+import UserProfile from '@/views/UserProfile.vue'
 
 const isAuthenticated = () => {
   return !!localStorage.getItem('authToken')
@@ -62,6 +63,15 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: ProfileView,
+      beforeEnter: (to, from, next) => {
+        isAuthenticated() ? next() : next('/login')
+      }
+    },
+    {
+      path: '/perfil/:userId', // Nova rota para o perfil do aluno
+      name: 'Perfil',
+      component: UserProfile, // Ou o componente específico para o perfil do aluno
+      props: true,
       beforeEnter: (to, from, next) => {
         isAuthenticated() ? next() : next('/login')
       }

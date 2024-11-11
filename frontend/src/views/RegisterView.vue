@@ -201,7 +201,7 @@ onMounted(async () => {
 }
 
 .input-container {
-  width: 40vw;
+  width: 50vw;
   background: #252526;
   display: flex;
   justify-content: center;
@@ -220,6 +220,7 @@ onMounted(async () => {
   align-items: center;
   gap: 2.5rem;
   text-align: center;
+  width: 40%;
 }
 
 h1 {
@@ -230,7 +231,7 @@ h1 {
 .form-group {
   display: flex;
   flex-direction: column;
-  
+  width: 100%;
   gap: 1rem;
 }
 
@@ -239,6 +240,8 @@ h1 {
 .dropdown {
   width: 100%;
 }
+
+
 
 .register-button {
   width: 60%;

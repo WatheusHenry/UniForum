@@ -1,23 +1,27 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="container">
-    <div class="image"></div>
+    <div class="image">
+      <img src="../assets/images/undraw_polaroid_re_481f.svg" alt="Imagem decorativa" />
+    </div>
 
     <section class="inputContainer">
       <div class="inputs">
         <img class="logoUnimar" src="../assets/images/logoUnimar.svg" alt="Logo Unimar" />
         <h1>Fórum de Perguntas e Respostas</h1>
+
         <div class="form-group">
-          <FloatLabel>
-            <InputText id="username" v-model="email" />
-            <label for="username">E-mail</label>
-          </FloatLabel>
-          <FloatLabel>
-            <Password v-model="senha" toggleMask :feedback="false" inputId="password" />
-            <label for="password">Senha</label>
-          </FloatLabel>
+          <div class="input-wrapper">
+            <input type="email" id="email" v-model="email" required />
+            <label for="email" class="floating-label">E-mail</label>
+          </div>
+          <div class="input-wrapper">
+            <input type="password" id="password" v-model="senha" required />
+            <label for="password" class="floating-label">Senha</label>
+          </div>
         </div>
-        <Button @click="handleLogin" class="login-button">Entrar</Button>
+
+        <button @click="handleLogin" class="login-button">Entrar</button>
         <a href="/register" class="register-link">Cadastre-se</a>
       </div>
     </section>
@@ -55,7 +59,9 @@ const handleLogin = async () => {
 
 .image {
   flex: 2;
-  background: url('../assets/images/background.jpg')
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .inputContainer {
@@ -89,26 +95,52 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  
+  justify-content: center;
+  /* width: 100%; */
 }
 
-.p-inputtext,
-.p-password input {
-  min-width: 19rem;
-  border: none;
-  border-bottom: 2px solid #555;
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 20rem;
+
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
   background-color: #2D2D30;
+  border: none;
+  border-radius: 0.5rem;
+  border-bottom: 2px solid #555;
   color: white;
   transition: border-color 0.3s;
 }
 
-
-.p-inputtext:focus,
-.p-password input:focus {
+input[type="email"]:focus,
+input[type="password"]:focus {
   border-bottom-color: #1DB954;
   outline: none;
 }
 
+.floating-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0;
+  font-size: 1rem;
+  color: #aaa;
+  pointer-events: none;
+  transition: 0.2s;
+}
+
+input:focus+.floating-label,
+input:not(:placeholder-shown)+.floating-label {
+  top: -1.5rem;
+  font-size: 0.85rem;
+  color: #1DB954;
+}
 
 .login-button {
   width: 10rem;

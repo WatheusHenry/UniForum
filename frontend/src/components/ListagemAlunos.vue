@@ -2,7 +2,8 @@
     <div class="alunos-matriculados">
         <h2>Alunos matriculados</h2>
         <ul>
-            <li v-for="(aluno, index) in alunos.slice(0, 4)" :key="index" :class="{ ativo: index === 0 }">
+            <li v-for="(aluno, index) in alunos.slice(0, 4)" :key="index" :class="{ ativo: index === 0 }"
+                @click="profile(aluno)">
                 <img class="avatar" :src="`${aluno.profilePicture}`" alt="">
                 <div class="aluno-info">
                     <span>{{ aluno.name }}</span>
@@ -17,16 +18,17 @@
             </div>
             <p>Manter-se organizado é fundamental para o sucesso nos estudos! Tente criar um cronograma semanal, onde
                 você pode definir horários específicos para suas aulas, revisões e descanso. Dessa forma, você consegue
-                equilibrar seus estudos e ainda ter tempo para relaxar."</p>
+                equilibrar seus estudos e ainda ter tempo para relaxar.</p>
         </div>
     </div>
 </template>
 
-
 <script setup>
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const alunos = ref([]);
 const curso = ref({});
 
@@ -59,9 +61,15 @@ const fetchAlunos = async () => {
     }
 };
 
+const profile = (aluno) => {
+    router.push({ name: 'Perfil', params: { userId: aluno.id } });
+};
+
 onMounted(() => {
     fetchAlunos();
 });
+
+
 </script>
 
 

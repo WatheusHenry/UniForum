@@ -7,14 +7,8 @@
                 <div
                     style="display: flex;justify-content: space-between;width: 100%;align-items: center;margin-bottom: 1rem;">
                     <div style="display: flex;gap: 2rem;">
-                        <div class="profile-picture-wrapper" @mouseenter="isHovering = true"
-                            @mouseleave="isHovering = false" @click="chooseProfilePicture">
+                        <div class="profile-picture-wrapper">
                             <img class="profile-picture" :src="user.profilePicture" alt="Profile Picture" />
-                            <input type="file" ref="fileInput" @change="handleProfilePictureChange"
-                                style="display: none" />
-                            <div class="edit-icon" v-if="isHovering">
-                                <i class="pi pi-pencil"></i>
-                            </div>
                         </div>
                         <div class="profile-info">
                             <h2>{{ user.name }}</h2>
@@ -22,114 +16,67 @@
                             <p>{{ user.currentTerm }}</p>
                         </div>
                     </div>
-                    <button @click="editMode = !editMode" class="edit-button">
-                        {{ editMode ? 'Cancelar' : 'Editar Perfil' }}
-                    </button>
                 </div>
                 <h3>Publicações</h3>
             </div>
 
-            <div v-if="editMode" class="edit-form">
-                <label>Nome:
-                    <input v-model="user.name" type="text" />
-                </label>
-                <label>Curso:
-                    <input v-model="user.curso.name" type="text" />
-                </label>
-                <button @click="saveProfile" class="save-button">Salvar</button>
-            </div>
 
             <div class="user-posts">
-                <Post v-for="post in userPosts" :key="post.id" :id="post.id" :title="post.title" :content="post.content"
+                <Post v-for="post in posts" :key="post.id" :id="post.id" :title="post.title" :content="post.content"
                     :createdAt="post.createdAt" :user="post.user" :discipline="post.discipline" />
             </div>
         </div>
-        
+        <ListagemAlunos />
     </div>
 </template>
 
 <script setup>
+import ListagemAlunos from '@/components/ListagemAlunos.vue';
 import Post from '@/components/Post.vue';
 import SearchBar from '@/components/SearchBar.vue';
 import SideBar from '@/components/SideBar.vue';
-import { fetchPostsByUser } from '@/services/postService';
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
+
 const route = useRoute();
+const userId = route.params.userId;
 const user = ref({});
-const userPosts = ref([]);
-const editMode = ref(false);
-const fileInput = ref(null);
-const isHovering = ref(false);
+const posts = ref([]);
+const token = () => localStorage.getItem('authToken')
 
-const loadUserPosts = async () => {
+const fetchUserProfile = async () => {
     try {
-        const page = 1;
-        const limit = 10;
-        const courseId = user.value.curso?.id;
-        const authToken = localStorage.getItem('authToken');
-        const userId = localStorage.getItem('idUser');
+        const userResponse = await axios.get(`http://localhost:3000/user/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token()}` // Adiciona o token no cabeçalho
+            }
+        });
+        user.value = userResponse.data;
 
-        const posts = await fetchPostsByUser(page, limit, courseId, authToken, userId);
-        userPosts.value = posts;
+        const postsResponse = await axios.get(`http://localhost:3000/post/user/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token()}` // Adiciona o token no cabeçalho
+            }
+        });
+        posts.value = postsResponse.data;
     } catch (error) {
-        console.error("Erro ao carregar publicações do usuário:", error);
-    }
-};
-
-// Lógica para salvar o perfil
-const saveProfile = () => {
-    editMode.value = false;
-};
-
-const triggerFileInput = () => {
-    fileInput.value.click();  // Aciona o input de arquivo
-};
-
-// Função para escolher a foto de perfil
-const chooseProfilePicture = () => {
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = 'image/*';
-
-    fileInput.addEventListener('change', handleFileSelect);
-    fileInput.click();
-};
-
-const handleFileSelect = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        try {
-            const formData = new FormData();
-            formData.append('file', file);
-
-            const response = await axios.post(
-                `http://localhost:3000/user/updateProfilePicture/${user.value.id}`,
-                formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('authToken')}`,
-                        'Content-Type': 'multipart/form-data',
-                    },
-                }
-            );
-
-            // Atualizar a foto de perfil no estado
-            user.value.profilePicture = response.data.user.profilePicture;
-            alert('Foto de perfil atualizada com sucesso');
-        } catch (error) {
-            console.error('Erro ao atualizar foto de perfil:', error);
-            alert('Erro ao atualizar foto de perfil');
-        }
+        console.error("Erro ao buscar dados do perfil:", error);
     }
 };
 
 onMounted(() => {
-    user.value = JSON.parse(route.query.user || '{}');
-    loadUserPosts(); // Carrega as publicações do usuário ao montar o componente
+    fetchUserProfile();
 });
+
+watch(
+    () => route.params.userId,
+    () => {
+        fetchUserProfile();
+    }
+);
+
 </script>
 
 <style scoped>
@@ -235,30 +182,11 @@ onMounted(() => {
     transition: background-color 0.3s ease;
 }
 
-.edit-button:hover,
-.save-button:hover {
-    background-color: #0056b3;
-}
 
-.edit-form {
-    margin: 1rem 0;
-}
 
-.edit-form label {
-    display: block;
-    margin-bottom: 0.5rem;
-}
 
-.edit-form input {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
 
-.enrolled-subjects {
-    margin-top: 1.5rem;
-}
+
 
 .enrolled-subjects h3,
 .user-posts h3 {
@@ -284,29 +212,25 @@ onMounted(() => {
     transition: background-color 0.3s ease;
 }
 
-.enrolled-subjects ul li:hover,
-.user-posts ul li:hover {
-    background-color: #555;
-}
+
 
 /* Estilos para a barra de rolagem */
 .profile-container::-webkit-scrollbar {
-  width: 8px;
+    width: 8px;
 }
 
 .profile-container::-webkit-scrollbar-track {
-  background: none;
-  border-radius: 10px;
+    background: none;
+    border-radius: 10px;
 }
 
 .profile-container::-webkit-scrollbar-thumb {
-  background-color: #272727;
-  border-radius: 10px;
-  border: 2px solid #2d2d2d;
+    background-color: #272727;
+    border-radius: 10px;
+    border: 2px solid #2d2d2d;
 }
 
 .profile-container::-webkit-scrollbar-thumb:hover {
-  background-color: #5e5e5e;
+    background-color: #5e5e5e;
 }
-
 </style>

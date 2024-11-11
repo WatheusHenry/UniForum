@@ -22,7 +22,9 @@
       <p class="post-content">{{ content }}</p>
       <div @click.stop="openImageModal()" style="margin: auto;display: flex;justify-content: center;">
 
-        <img v-if="imageUrl" :src="`${imageUrl}`" class="imagem" />
+        <!-- <img :src="`${imageUrl}`"  /> -->
+        <Image v-if="imageUrl"  :src="`${imageUrl}`" alt="Image" zoomOutDisabled zoomInDisabled width="500px" preview />
+
       </div>
       <div class="post-actions">
         <button class="action-button">
@@ -278,6 +280,7 @@ const openImageModal = () => {
 
 .imagem {
   width: 80%;
+  height: 25vh;
   cursor: pointer;
   border-radius: 1rem;
   background-color: #171717;
