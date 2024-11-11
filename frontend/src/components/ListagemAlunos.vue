@@ -2,7 +2,7 @@
     <div class="alunos-matriculados">
         <h2>Alunos matriculados</h2>
         <ul>
-            <li v-for="(aluno, index) in alunos.slice(0, 4)" :key="index" :class="{ ativo: index === 0 }"
+            <li v-for="(aluno, index) in alunos.slice(0, 5)" :key="index" :class="{ ativo: index === 0 }"
                 @click="profile(aluno)">
                 <img class="avatar" :src="aluno.profilePicture || 'https://placehold.co/600'" alt=""
                     @error="setPlaceholder" />

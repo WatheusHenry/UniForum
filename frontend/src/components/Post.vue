@@ -1,10 +1,10 @@
 <template>
   <div class="post" @click="goToDetail">
     <div class="post-header">
-      <img :src="`${profilePicture}`" alt="Profile Picture" class="profile-pic" />
+      <img :src="`${profilePicture}`" alt="Profile Picture" class="profile-pic" @click.stop="profile(user)" />
       <div class="post-info">
         <div style="display: flex; gap: 1rem; align-items: center;">
-          <p class="post-author">{{ userName }}</p>
+          <p class="post-author" @click.stop="profile(user)">{{ userName }}</p>
           <p class="post-discipline">{{ disciplineName }}</p>
         </div>
         <div style="display: flex; gap: 1rem; align-items: center;">
@@ -154,6 +154,10 @@ const openImageModal = () => {
   showImageModal.value = true;
   console.log("dfads")
 };
+
+const profile = (user) => {
+    router.push({ name: 'Perfil', params: { userId: user.id } });
+};
 </script>
 
 <style scoped>
@@ -196,6 +200,10 @@ const openImageModal = () => {
 .post-author {
   font-weight: bold;
   font-size: 1.2rem;
+}
+
+.post-author:hover{
+  text-decoration: underline;
 }
 
 .post-discipline {

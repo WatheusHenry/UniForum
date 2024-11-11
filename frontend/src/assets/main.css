@@ -31,3 +31,11 @@
 .p-image-original {
     max-width: 70vw !important;
 }
+
+.p-image-preview-mask{
+    border-radius: 1rem !important;
+}
+
+img{
+    border-radius: 1rem;
+}
