@@ -42,7 +42,7 @@
     <div class="fixed-subjects">
       <h3>Matérias matriculadas</h3>
       <ul>
-        <li v-for="(disciplina, index) in disciplinas" :key="index">
+        <li v-for="(disciplina, index)  in disciplinas" :key="index" @click="SeeDiscipline(disciplina)">
           {{ disciplina.name }}
         </li>
       </ul>
@@ -79,12 +79,19 @@ const logout = () => {
 };
 
 const profile = () => {
-  router.push({ 
-    path: '/profile', 
-    query: { 
-      user: JSON.stringify(user.value), 
-      disciplinas: JSON.stringify(disciplinas.value) 
-    } 
+  router.push({
+    path: '/profile',
+    query: {
+      user: JSON.stringify(user.value),
+      disciplinas: JSON.stringify(disciplinas.value)
+    }
+  });
+}
+
+const SeeDiscipline = (disciplina) => {
+  router.push({
+    path: `/materia/${disciplina.id}`,
+    
   });
 }
 
@@ -158,10 +165,12 @@ onMounted(() => {
   color: white;
   line-height: 0.5rem
 }
-i{
+
+i {
   font-size: 1.5rem;
   color: #c5c5c5;
 }
+
 .menu {
   padding: 15px;
   width: 200px;

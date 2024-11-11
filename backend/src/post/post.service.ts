@@ -121,6 +121,24 @@ export class PostService {
     return posts;
   }
 
+  async findByMateriaId(
+    materiaId: number,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ posts: Post[]; total: number; disciplineName: string }> {
+    const [posts, total] = await this.postRepository.findAndCount({
+      where: { discipline: { id: materiaId } },
+      relations: ['user', 'discipline'],
+      skip: (page - 1) * limit,
+      take: limit,
+      order: { createdAt: 'DESC' },
+    });
+
+    const disciplineName = posts.length > 0 ? posts[0].discipline.name : null;
+
+    return { posts, total, disciplineName };
+  }
+
   async update(id: number, updatePostDto: Partial<UpdatePostDto>) {
     const postExistente = await this.findOne(id); // Reutilizando o método findOne
 

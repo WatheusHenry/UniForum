@@ -60,6 +60,15 @@ export class PostController {
     return await this.postService.findByCursoId(cursoId, page, limit);
   }
 
+  @Get('materia/:materiaId')
+  async findByMateriaId(
+    @Param('materiaId') materiaId: number,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ) {
+    return await this.postService.findByMateriaId(materiaId, page, limit);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.postService.findOne(+id);
