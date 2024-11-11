@@ -4,7 +4,8 @@
         <ul>
             <li v-for="(aluno, index) in alunos.slice(0, 4)" :key="index" :class="{ ativo: index === 0 }"
                 @click="profile(aluno)">
-                <img class="avatar" :src="`${aluno.profilePicture}`" alt="">
+                <img class="avatar" :src="aluno.profilePicture || 'https://placehold.co/600'" alt=""
+                    @error="setPlaceholder" />
                 <div class="aluno-info">
                     <span>{{ aluno.name }}</span>
                     <small>{{ curso.name }}</small>

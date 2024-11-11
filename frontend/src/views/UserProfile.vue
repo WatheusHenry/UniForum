@@ -8,7 +8,9 @@
                     style="display: flex;justify-content: space-between;width: 100%;align-items: center;margin-bottom: 1rem;">
                     <div style="display: flex;gap: 2rem;">
                         <div class="profile-picture-wrapper">
-                            <img class="profile-picture" :src="user.profilePicture" alt="Profile Picture" />
+                            <!-- <img class="profile-picture" :src="user.profilePicture" alt="Profile Picture" /> -->
+                            <img class="profile-picture" :src="user.profilePicture || 'https://placehold.co/500'" alt=""
+                                @error="setPlaceholder" />
                         </div>
                         <div class="profile-info">
                             <h2>{{ user.name }}</h2>
