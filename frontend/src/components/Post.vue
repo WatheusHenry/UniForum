@@ -293,4 +293,8 @@ const openImageModal = () => {
   height: auto;
   object-fit: contain;
 }
+
+.p-image-original {
+  max-width: 70vw !important;
+}
 </style>

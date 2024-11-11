@@ -24,6 +24,10 @@
     color: #2c2f38 !important;
 }
 
-.p-inputtext{
+.p-inputtext {
     width: 100%;
+}
+
+.p-image-original {
+    max-width: 70vw !important;
 }
