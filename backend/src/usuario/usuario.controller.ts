@@ -10,6 +10,7 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
+  Req,
 } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
@@ -19,6 +20,7 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MinioService } from 'src/minio.service';
+import { Request } from 'src/client/request';
 
 @ApiTags('User')
 @Controller('user')
@@ -38,6 +40,17 @@ export class UsuarioController {
   @UseGuards(AuthGuard)
   findAll() {
     return this.usuarioService.findAll();
+  }
+
+  @Get('account')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  async getAccount(@Req() req: Request) {
+    const user: any = req.user;
+    const userProfileFound = await this.usuarioService.findOneById(
+      user.user.id,
+    );
+    return userProfileFound;
   }
 
   @Get(':id')

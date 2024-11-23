@@ -1,6 +1,7 @@
 // usuario.entity.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { Curso } from 'src/curso/entities/curso.entity';
+import { TypeUser } from 'src/enums/type-user.enum';
 import { Message } from 'src/message/entities/message.entity';
 import { Post } from 'src/post/entities/post.entity';
 import {
@@ -43,6 +44,13 @@ export class Usuario {
   })
   @Column({ type: 'varchar', length: 255 })
   password: string;
+
+  @ApiProperty({
+    example: 'ALUNO',
+    description: 'Tipo de usuário',
+  })
+  @Column({ type: 'enum', enum: TypeUser, default: TypeUser.ALUNO })
+  type: TypeUser;
 
   @ApiProperty({ example: 1, description: 'ID do curso vinculado' })
   @ManyToOne(() => Curso, (curso) => curso.users, { nullable: true }) // Relacionamento Many-to-One

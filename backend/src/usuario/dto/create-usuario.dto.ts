@@ -8,6 +8,7 @@ import {
   ArrayNotEmpty,
   IsOptional,
 } from 'class-validator';
+import { TypeUser } from 'src/enums/type-user.enum';
 
 export class CreateUsuarioDto {
   @IsString()
@@ -63,4 +64,12 @@ export class CreateUsuarioDto {
     required: false,
   })
   profilePicture?: string;
+
+  @ApiProperty({
+    enum: TypeUser,
+    default: TypeUser.ALUNO,
+    example: 'ALUNO',
+    description: 'Tipo de usuário',
+  })
+  type: TypeUser;
 }

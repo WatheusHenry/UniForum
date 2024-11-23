@@ -7,11 +7,11 @@ export class MinioService {
 
   constructor() {
     this.minioClient = new Client({
-      endPoint: 'localhost', // Endereço do seu MinIO (por exemplo, 'localhost')
-      port: 9000, // Porta do MinIO (normalmente 9000)
-      useSSL: false, // Defina como 'true' se estiver usando SSL
-      accessKey: 'TXjthqZ1ibMHudxsczM1', // Chave de acesso do MinIO
-      secretKey: 'cIMv5uRYMC6Hv0esDG5c9gKQ9u8YrtZ8wh0nxf43', // Chave secreta do MinIO
+      endPoint: process.env.MINIO_ENDPOINT,
+      port: +process.env.MINIO_PORT,
+      useSSL: false,
+      accessKey: process.env.MINIO_ACCESS_KEY,
+      secretKey: process.env.MINIO_SECRET_KEY,
     });
   }
 

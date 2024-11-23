@@ -12,7 +12,16 @@
           <button class="menu-button" @click.stop="showMenu($event)">
             <i class="pi pi-ellipsis-v"></i>
           </button>
-          <Menu :model="menuItems" popup ref="menu" />
+
+          <Menu :model="menuItems" popup ref="menu">
+            <template #item="{ item, props }">
+              <a v-if="item.havePermission" v-ripple v-bind="props.action" @click="item.command">
+                <span :class="item.icon" />
+                <span class="ml-2">{{ item.label }}</span>
+              </a>
+            </template>
+          </Menu>
+
         </div>
       </div>
     </div>
@@ -62,8 +71,10 @@ import { defineProps, computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Dialog from 'primevue/dialog';
 import { deletePost } from '@/services/postService';
+import { useUserStore } from '@/store/userStore';
 
 const router = useRouter();
+const userStore = useUserStore();
 const menu = ref(null); // Referência ao Menu
 const showShareModal = ref(false); // Controle de exibição do modal
 const showImageModal = ref(false); // Controle do modal para imagem ampliada
@@ -102,12 +113,14 @@ const menuItems = [
   {
     label: 'Deletar',
     icon: 'pi pi-trash',
-    command: () => handleDeletePost()
+    command: () => handleDeletePost(),
+    havePermission: userStore.type !== 'ALUNO'
   },
   {
     label: 'Denunciar',
     icon: 'pi pi-exclamation-triangle',
-    command: () => handleReportPost()
+    command: () => handleReportPost(),
+    havePermission: true,
   }
 ];
 

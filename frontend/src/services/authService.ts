@@ -1,11 +1,12 @@
-// services/authService.js
-import axios from 'axios'
+import { useUserStore } from '@/store/userStore';
+import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/auth'
+const API_URL = 'http://localhost:3000'
+const userStore = useUserStore();
 
 export async function login(email: string, password: string) {
   try {
-    const response = await axios.post(`${API_URL}/login`, {
+    const response = await axios.post(`${API_URL}/auth/login`, {
       email,
       password
     })
@@ -13,6 +14,14 @@ export async function login(email: string, password: string) {
     if (response.data) {
       localStorage.setItem('authToken', response.data.token.access_token)
       localStorage.setItem('idUser', response.data.token.userId)
+
+      axios.get(`${API_URL}/user/account`, {
+        headers: {
+          Authorization: `Bearer ${response.data.token.access_token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(res => userStore.setType(res.data.type))
     }
 
     return response.data
