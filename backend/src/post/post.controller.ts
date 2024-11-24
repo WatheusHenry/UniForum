@@ -10,6 +10,7 @@ import {
   Query,
   UseInterceptors,
   UploadedFile,
+  Req,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -17,6 +18,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Request } from 'src/client/request';
 
 @Controller('post')
 @ApiTags('Post')
@@ -41,6 +43,12 @@ export class PostController {
     @Query('limit') limit: number = 10,
   ) {
     return await this.postService.findAll(page, limit);
+  }
+
+  @Get('deleted-by-user')
+  async getDeletedPostsByUser(@Req() req: Request) {
+    const user: any = req.user;
+    return await this.postService.findDeletedPostsByUser(user.user.id);
   }
 
   @Get('user/:userId')
@@ -76,12 +84,16 @@ export class PostController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return await this.postService.update(+id, updatePostDto);
+  async update(
+    @Param('id') id: number,
+    @Body() updatePostDto: Partial<UpdatePostDto>,
+  ) {
+    return await this.postService.patchUpdate(id, updatePostDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number) {
-    return await this.postService.remove(id);
+  async remove(@Param('id') id: number, @Req() req: Request) {
+    const user: any = req.user;
+    await this.postService.softDelete(id, user.user.id);
   }
 }

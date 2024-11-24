@@ -144,19 +144,28 @@ export class PostService {
     return { posts, total, disciplineName };
   }
 
+  async findDeletedPostsByUser(userId: number): Promise<Post[]> {
+    return await this.postRepository
+      .createQueryBuilder('post')
+      .where('post.deletedBy = :userId', { userId })
+      .andWhere('post.deletedAt IS NOT NULL')
+      .withDeleted()
+      .getMany();
+  }
+
   async update(id: number, updatePostDto: UpdatePostDto) {
     const { user, ...rest } = updatePostDto;
 
     let userEntity = null;
     if (user) {
       userEntity = await this.usuarioRepository.findOne({
-        where: { id: user },
+        where: { id: user.id },
       });
     }
 
     await this.postRepository.update(id, {
       ...rest,
-      user: userEntity, //
+      user: userEntity,
     });
 
     return this.postRepository.findOne({
@@ -165,10 +174,19 @@ export class PostService {
     });
   }
 
+  async patchUpdate(id: number, updatePostDto: Partial<UpdatePostDto>) {
+    return await this.postRepository.update(id, updatePostDto);
+  }
+
   async remove(id: number) {
-    const postExistente = await this.findOne(id); // Reutilizando o método findOne
+    const postExistente = await this.findOne(id);
 
     await this.postRepository.delete({ id });
-    return postExistente; // Retornar o post removido, se necessário
+    return postExistente;
+  }
+
+  async softDelete(postId: number, userId: number) {
+    await this.postRepository.update(postId, { deletedBy: { id: userId } });
+    await this.postRepository.softDelete({ id: postId });
   }
 }

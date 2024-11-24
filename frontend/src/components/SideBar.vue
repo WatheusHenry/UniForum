@@ -37,6 +37,12 @@
             Logout
           </a>
         </li>
+        <li>
+          <a href="/publicacoes-deletadas">
+            <i class="pi pi-comment"></i>
+            Publicações deletadas
+          </a>
+        </li>
       </ul>
     </nav>
     <div class="fixed-subjects">

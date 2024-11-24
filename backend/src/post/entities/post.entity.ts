@@ -4,6 +4,7 @@ import { Usuario } from 'src/usuario/entities/usuario.entity';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -23,7 +24,7 @@ export class Post {
   content: string;
 
   @Column({ name: 'image_url', type: 'varchar', nullable: true })
-  imageUrl: string; // URL da imagem
+  imageUrl: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -38,4 +39,11 @@ export class Post {
 
   @OneToMany(() => Message, (message) => message.post)
   messages: Message[];
+
+  @DeleteDateColumn({ name: 'deleted_at' })
+  deletedAt: Date | null;
+
+  @ManyToOne(() => Usuario, { nullable: true })
+  @JoinColumn({ name: 'deleted_by' })
+  deletedBy: Usuario | null;
 }
